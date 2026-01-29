@@ -7,7 +7,6 @@ _site/
 # Ruby
 vendor/
 .bundle/
-Gemfile.lock
 
 # IDE
 .idea/
