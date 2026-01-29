@@ -1,0 +1,263 @@
+---
+# Only the main Sass file needs front matter (the dashes are enough)
+---
+
+@charset "utf-8";
+
+/* ==========================================================================
+   Font Size Overrides (Smaller fonts)
+   ========================================================================== */
+
+$doc-font-size: 14 !default;
+$type-size-1: 2.0em !default;   // ~28px (was 2.441em)
+$type-size-2: 1.6em !default;   // ~22px (was 1.953em)
+$type-size-3: 1.35em !default;  // ~19px (was 1.563em)
+$type-size-4: 1.15em !default;  // ~16px (was 1.25em)
+$type-size-5: 0.95em !default;  // ~13px (was 1em)
+$type-size-6: 0.8em !default;   // ~11px (was 0.75em)
+$type-size-7: 0.7em !default;   // ~10px (was 0.6875em)
+$type-size-8: 0.6em !default;   // ~8px (was 0.625em)
+
+@import "minimal-mistakes/skins/{{ site.minimal_mistakes_skin | default: 'default' }}";
+@import "minimal-mistakes";
+
+/* ==========================================================================
+   Custom Animations
+   ========================================================================== */
+
+/* Fade in animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Slide in from left */
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Slide in from right */
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Scale up animation */
+@keyframes scaleUp {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Apply animations to page content */
+.page__content {
+  animation: fadeIn 0.6s ease-out;
+}
+
+/* Animate archive items */
+.archive__item {
+  animation: fadeIn 0.5s ease-out backwards;
+
+  @for $i from 1 through 20 {
+    &:nth-child(#{$i}) {
+      animation-delay: #{$i * 0.05}s;
+    }
+  }
+}
+
+/* Animate sidebar */
+.sidebar {
+  animation: slideInLeft 0.5s ease-out;
+}
+
+/* Animate author profile */
+.author__avatar {
+  animation: scaleUp 0.6s ease-out;
+
+  /* Disable link and zoom on profile image */
+  a {
+    pointer-events: none;
+    cursor: default;
+  }
+
+  img {
+    &:hover {
+      transform: none;
+    }
+  }
+}
+
+.author__content {
+  animation: fadeIn 0.6s ease-out 0.2s backwards;
+
+  /* Disable link on author name */
+  a {
+    pointer-events: none;
+    cursor: default;
+    text-decoration: none;
+  }
+}
+
+.author__urls-wrapper {
+  animation: fadeIn 0.6s ease-out 0.3s backwards;
+}
+
+/* Animate navigation */
+.greedy-nav {
+  .visible-links {
+    a {
+      position: relative;
+      transition: color 0.3s ease;
+
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        width: 0;
+        height: 2px;
+        background: currentColor;
+        transition: all 0.3s ease;
+        transform: translateX(-50%);
+      }
+
+      &:hover::after {
+        width: 100%;
+      }
+    }
+  }
+}
+
+/* Animate masthead */
+.masthead {
+  animation: slideInRight 0.5s ease-out;
+}
+
+/* Smooth hover effects for links */
+a {
+  transition: color 0.2s ease, opacity 0.2s ease;
+}
+
+/* Animate post cards on hover */
+.archive__item-teaser {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  }
+}
+
+/* Animate TOC */
+.toc {
+  animation: slideInRight 0.5s ease-out 0.3s backwards;
+
+  .toc__menu a {
+    transition: color 0.2s ease, padding-left 0.2s ease;
+
+    &:hover {
+      padding-left: 0.5em;
+    }
+  }
+}
+
+/* Animate buttons */
+.btn {
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+/* Animate search */
+.search-content {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Animate page title */
+.page__title {
+  animation: fadeIn 0.5s ease-out;
+}
+
+/* Animate page meta */
+.page__meta {
+  animation: fadeIn 0.5s ease-out 0.1s backwards;
+}
+
+/* Smooth scroll behavior */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Animate taxonomy items */
+.taxonomy__section {
+  animation: fadeIn 0.5s ease-out backwards;
+
+  @for $i from 1 through 10 {
+    &:nth-child(#{$i}) {
+      animation-delay: #{$i * 0.1}s;
+    }
+  }
+}
+
+/* Footer animation */
+.page__footer {
+  animation: fadeIn 0.6s ease-out;
+}
+
+/* Pagination animation */
+.pagination {
+  animation: fadeIn 0.5s ease-out 0.4s backwards;
+
+  .pagination--pager {
+    transition: all 0.3s ease;
+
+    &:hover {
+      transform: scale(1.05);
+    }
+  }
+}
+
+/* Code block animation */
+.highlight {
+  animation: fadeIn 0.4s ease-out;
+}
+
+/* Image zoom on hover */
+.page__content img {
+  transition: transform 0.3s ease;
+
+  &:hover {
+    transform: scale(1.02);
+  }
+}

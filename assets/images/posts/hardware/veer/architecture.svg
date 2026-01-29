@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400">
+  <rect width="800" height="400" fill="#1a1a2e"/>
+  <text x="400" y="180" text-anchor="middle" fill="#eee" font-family="Arial" font-size="32" font-weight="bold">VeeR RISC-V Core</text>
+  <text x="400" y="230" text-anchor="middle" fill="#888" font-family="Arial" font-size="18">Architecture Diagram</text>
+  <rect x="100" y="280" width="180" height="60" fill="#2d3a4a" rx="5"/>
+  <text x="190" y="315" text-anchor="middle" fill="#eee" font-family="Arial" font-size="14">I-Cache</text>
+  <rect x="310" y="280" width="180" height="60" fill="#2d3a4a" rx="5"/>
+  <text x="400" y="315" text-anchor="middle" fill="#eee" font-family="Arial" font-size="14">Core Pipeline</text>
+  <rect x="520" y="280" width="180" height="60" fill="#2d3a4a" rx="5"/>
+  <text x="610" y="315" text-anchor="middle" fill="#eee" font-family="Arial" font-size="14">D-Cache</text>
+</svg>

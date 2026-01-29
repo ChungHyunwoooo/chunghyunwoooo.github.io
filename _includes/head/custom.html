@@ -1,0 +1,30 @@
+<!-- Mermaid JS for diagrams -->
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: 'dark',
+    themeVariables: {
+      primaryColor: '#4a90d9',
+      primaryTextColor: '#fff',
+      primaryBorderColor: '#7C0000',
+      lineColor: '#888',
+      secondaryColor: '#2d3a4a',
+      tertiaryColor: '#1a1a2e'
+    }
+  });
+</script>
+
+<!-- MathJax for LaTeX equations -->
+<script>
+  MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      displayMath: [['$$', '$$'], ['\\[', '\\]']]
+    },
+    svg: {
+      fontCache: 'global'
+    }
+  };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" async></script>
