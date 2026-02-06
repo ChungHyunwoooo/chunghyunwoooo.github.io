@@ -8,6 +8,8 @@ tags:
   - Zsh
   - Linux
   - Terminal
+series: "Linux - Zsh"
+series_order: 1
 mermaid: true
 ---
 

@@ -9,6 +9,8 @@ tags:
   - Terminal
   - Customization
   - Pywal
+series: "Linux - Zsh"
+series_order: 2
 mermaid: true
 ---
 

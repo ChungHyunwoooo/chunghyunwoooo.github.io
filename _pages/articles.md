@@ -4,7 +4,7 @@ permalink: /articles/
 layout: collection
 collection: articles
 entries_layout: grid
+sort_by: date
+sort_order: reverse
 classes: wide
 ---
-
-단일 글 모음입니다.

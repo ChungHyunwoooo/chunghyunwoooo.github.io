@@ -2,28 +2,164 @@
   <div class="sidebar sticky">
   {% if page.author_profile or layout.author_profile %}{% include author-profile.html %}{% endif %}
 
-  {% comment %} Series navigation {% endcomment %}
-  {% assign series_groups = site.series | group_by: "series" %}
-  {% assign has_series = false %}
-  {% for sg in series_groups %}
-    {% if sg.name != "" %}{% assign has_series = true %}{% break %}{% endif %}
-  {% endfor %}
-  {% if has_series %}
+  {% comment %} Series navigation — auto-depth tree built from post.path {% endcomment %}
+  {% if site.series.size > 0 %}
   <nav class="sidebar-nav">
-    <h3 class="sidebar-nav__title">Series</h3>
-    <ul class="sidebar-nav__list">
-      {% for sg in series_groups %}
-        {% if sg.name != "" %}
-          {% assign first_post = sg.items | sort: "series_order" | first %}
-          <li class="sidebar-nav__item">
-            <a href="{{ first_post.url | relative_url }}">
-              {{ sg.name }}
-              <span class="sidebar-nav__count">{{ sg.items.size }}</span>
-            </a>
-          </li>
-        {% endif %}
-      {% endfor %}
-    </ul>
+    <a href="/series/" class="sidebar-nav__title-link"><h3 class="sidebar-nav__title">Series</h3></a>
+    <div id="sidebar-tree" class="sidebar-tree"></div>
+    <script>
+    (function() {
+      var posts = [
+        {% for post in site.series %}
+        { path: {{ post.path | jsonify }}, title: {{ post.title | jsonify }}, url: {{ post.url | relative_url | jsonify }}, order: {{ post.series_order | default: 0 }} }{% unless forloop.last %},{% endunless %}
+        {% endfor %}
+      ];
+      var currentUrl = {{ page.url | jsonify }};
+
+      // Parse path into folder segments + leaf
+      // _series/Linux/01-zsh/01-setup-zsh/index.md → folders: ["Linux","01-zsh"], leaf: post
+      function parsePath(p) {
+        var parts = p.replace(/^_series\//, '').replace(/\/index\.md$/, '').split('/');
+        return { folders: parts.slice(0, -1), leaf: parts[parts.length - 1] };
+      }
+
+      // Format folder slug: strip leading NN- prefix, replace - with space, capitalize first letter
+      function formatFolder(slug) {
+        var name = slug.replace(/^\d+-/, '');
+        name = name.replace(/-/g, ' ');
+        return name.charAt(0).toUpperCase() + name.slice(1);
+      }
+
+      // Build tree: { folderSlug: { _children: {...}, _posts: [...] } }
+      var tree = {};
+      posts.forEach(function(post) {
+        var parsed = parsePath(post.path);
+        var cursor = tree;
+        parsed.folders.forEach(function(f) {
+          if (!cursor[f]) cursor[f] = { _children: {}, _posts: [] };
+          cursor = cursor[f]._children;
+        });
+      });
+      // Second pass: attach posts to deepest folder
+      posts.forEach(function(post) {
+        var parsed = parsePath(post.path);
+        var node = tree;
+        for (var i = 0; i < parsed.folders.length; i++) {
+          if (i === parsed.folders.length - 1) {
+            node[parsed.folders[i]]._posts.push(post);
+          } else {
+            node = node[parsed.folders[i]]._children;
+          }
+        }
+      });
+
+      // Sort posts by order
+      function sortPosts(node) {
+        if (node._posts) node._posts.sort(function(a, b) { return a.order - b.order; });
+        if (node._children) {
+          Object.keys(node._children).forEach(function(k) { sortPosts(node._children[k]); });
+        }
+      }
+      Object.keys(tree).forEach(function(k) { sortPosts(tree[k]); });
+
+      // Count total posts under a node
+      function countPosts(node) {
+        var c = node._posts ? node._posts.length : 0;
+        if (node._children) {
+          Object.keys(node._children).forEach(function(k) { c += countPosts(node._children[k]); });
+        }
+        return c;
+      }
+
+      // Check if node contains current page
+      function containsCurrent(node) {
+        if (node._posts) {
+          for (var i = 0; i < node._posts.length; i++) {
+            if (node._posts[i].url === currentUrl) return true;
+          }
+        }
+        if (node._children) {
+          var keys = Object.keys(node._children);
+          for (var i = 0; i < keys.length; i++) {
+            if (containsCurrent(node._children[keys[i]])) return true;
+          }
+        }
+        return false;
+      }
+
+      var arrowSvg = '<svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+      // Render tree recursively
+      function renderNode(children, depth) {
+        var ul = document.createElement('ul');
+        ul.className = 'sidebar-tree__list';
+        ul.style.paddingLeft = depth > 0 ? '0.6rem' : '0';
+
+        // Sort folder keys naturally
+        var keys = Object.keys(children).sort();
+
+        keys.forEach(function(slug) {
+          var node = children[slug];
+          var hasSubs = node._children && Object.keys(node._children).length > 0;
+          var hasPosts = node._posts && node._posts.length > 0;
+          var isActive = containsCurrent(node);
+          var total = countPosts(node);
+
+          var li = document.createElement('li');
+          li.className = 'sidebar-tree__node';
+
+          // Folder toggle button
+          var btn = document.createElement('button');
+          btn.className = 'sidebar-tree__toggle';
+          btn.innerHTML = '<span class="sidebar-tree__name">' + formatFolder(slug) + '</span>' +
+            '<span class="sidebar-tree__right">' +
+            '<span class="sidebar-nav__count">' + total + '</span>' +
+            '<span class="sidebar-tree__arrow' + (isActive ? ' rotated' : '') + '">' + arrowSvg + '</span>' +
+            '</span>';
+
+          var childWrap = document.createElement('div');
+          childWrap.className = 'sidebar-tree__children' + (isActive ? ' open' : '');
+
+          btn.addEventListener('click', function() {
+            var open = childWrap.classList.contains('open');
+            childWrap.classList.toggle('open');
+            btn.querySelector('.sidebar-tree__arrow').classList.toggle('rotated');
+          });
+
+          li.appendChild(btn);
+
+          // Render sub-folders
+          if (hasSubs) {
+            childWrap.appendChild(renderNode(node._children, depth + 1));
+          }
+
+          // Render posts
+          if (hasPosts) {
+            var postUl = document.createElement('ul');
+            postUl.className = 'sidebar-tree__list';
+            node._posts.forEach(function(post) {
+              var pli = document.createElement('li');
+              pli.className = 'sidebar-tree__leaf' + (post.url === currentUrl ? ' sidebar-tree__leaf--active' : '');
+              var a = document.createElement('a');
+              a.href = post.url;
+              a.innerHTML = '<span class="sidebar-tree__order">' + post.order + '.</span> ' + post.title;
+              pli.appendChild(a);
+              postUl.appendChild(pli);
+            });
+            childWrap.appendChild(postUl);
+          }
+
+          li.appendChild(childWrap);
+          ul.appendChild(li);
+        });
+
+        return ul;
+      }
+
+      var container = document.getElementById('sidebar-tree');
+      container.appendChild(renderNode(tree, 0));
+    })();
+    </script>
   </nav>
   {% endif %}
 

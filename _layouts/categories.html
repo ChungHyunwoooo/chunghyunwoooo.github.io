@@ -4,7 +4,7 @@ layout: archive
 
 {{ content }}
 
-{% assign all_posts = site.series | concat: site.articles %}
+{% assign all_posts = site.series | concat: site.articles | sort: "date" | reverse %}
 {% assign categories_list = "" | split: "" %}
 
 {% for post in all_posts %}

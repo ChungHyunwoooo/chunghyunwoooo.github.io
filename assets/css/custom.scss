@@ -243,6 +243,14 @@
   border-top: 1px solid #333;
 }
 
+.sidebar-nav__title-link {
+  text-decoration: none;
+
+  &:hover .sidebar-nav__title {
+    color: #00d9ff;
+  }
+}
+
 .sidebar-nav__title {
   font-size: 0.85rem;
   font-weight: 700;
@@ -250,6 +258,7 @@
   text-transform: uppercase;
   letter-spacing: 0.05em;
   margin: 0 0 0.75rem 0;
+  transition: color 0.2s;
 }
 
 .sidebar-nav__list {
@@ -287,6 +296,103 @@
   border-radius: 10px;
   min-width: 1.4rem;
   text-align: center;
+}
+
+/* Sidebar Tree (auto-depth) */
+.sidebar-tree__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.sidebar-tree__toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0.4rem 0.6rem;
+  border: none;
+  border-radius: 6px;
+  background: none;
+  color: #ccc;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  text-align: left;
+  font-family: inherit;
+
+  &:hover {
+    background: #2d2d44;
+    color: #00d9ff;
+  }
+}
+
+.sidebar-tree__name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sidebar-tree__right {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-shrink: 0;
+}
+
+.sidebar-tree__arrow {
+  display: flex;
+  align-items: center;
+  color: #666;
+  transition: transform 0.3s, color 0.3s;
+
+  &.rotated {
+    transform: rotate(180deg);
+    color: #00d9ff;
+  }
+}
+
+.sidebar-tree__children {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+
+  &.open {
+    max-height: 2000px;
+  }
+}
+
+.sidebar-tree__leaf {
+  a {
+    display: flex;
+    align-items: baseline;
+    gap: 0.3rem;
+    padding: 0.3rem 0.6rem 0.3rem 1.2rem;
+    color: #999;
+    text-decoration: none;
+    font-size: 0.8rem;
+    border-radius: 4px;
+    transition: background 0.2s, color 0.2s;
+    line-height: 1.4;
+
+    &:hover {
+      background: #2d2d44;
+      color: #00d9ff;
+    }
+  }
+
+  &--active a {
+    color: #00d9ff;
+    font-weight: 600;
+  }
+}
+
+.sidebar-tree__order {
+  color: #666;
+  font-size: 0.75rem;
+  flex-shrink: 0;
 }
 
 /* Community List (Board Style) */

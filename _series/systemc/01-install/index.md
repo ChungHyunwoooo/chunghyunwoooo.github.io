@@ -11,7 +11,7 @@ tags:
   - SystemC
   - Linux
   - Verification
-series: "SystemC 튜토리얼"
+series: "SystemC"
 series_order: 1
 ---
 
