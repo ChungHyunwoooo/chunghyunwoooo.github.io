@@ -1,0 +1,22 @@
+<nav class="nav__list">
+  <ul class="nav__items">
+    {% assign posts_by_series = site.series | group_by: "series" %}
+    {% for s in posts_by_series %}
+      {% if s.name != "" %}
+      <li>
+        <span class="nav__sub-title">{{ s.name }}</span>
+        <ul>
+          {% assign sorted_items = s.items | sort: "series_order" %}
+          {% for item in sorted_items %}
+          <li>
+            <a href="{{ item.url }}"{% if item.url == page.url %} class="active"{% endif %}>
+              {% if item.series_order %}{{ item.series_order }}. {% endif %}{{ item.title }}
+            </a>
+          </li>
+          {% endfor %}
+        </ul>
+      </li>
+      {% endif %}
+    {% endfor %}
+  </ul>
+</nav>

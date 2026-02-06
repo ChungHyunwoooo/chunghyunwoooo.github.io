@@ -1,4 +1,5 @@
 ---
+permalink: /articles/attention-mechanism/
 title: "Attention Mechanism 완벽 이해"
 date: 2024-01-20
 categories:

@@ -1,0 +1,31 @@
+---
+layout: archive
+---
+
+{{ content }}
+
+{% assign all_posts = site.series | concat: site.articles %}
+{% assign categories_list = "" | split: "" %}
+
+{% for post in all_posts %}
+  {% for category in post.categories %}
+    {% unless categories_list contains category %}
+      {% assign categories_list = categories_list | push: category %}
+    {% endunless %}
+  {% endfor %}
+{% endfor %}
+
+{% assign categories_list = categories_list | sort %}
+
+{% for category in categories_list %}
+  <section id="{{ category | slugify }}" class="taxonomy__section">
+    <h2 class="archive__subtitle">{{ category }}</h2>
+    <div class="entries-list">
+      {% for post in all_posts %}
+        {% if post.categories contains category %}
+          {% include archive-single.html type="list" %}
+        {% endif %}
+      {% endfor %}
+    </div>
+  </section>
+{% endfor %}

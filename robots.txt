@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://chunghyunwoooo.github.io/sitemap.xml

@@ -1,0 +1,67 @@
+---
+layout: archive
+---
+
+{{ content }}
+
+{% assign all_posts = site.series | concat: site.articles | sort: "date" | reverse %}
+
+<!-- 최근 글 섹션 -->
+<section class="home-section">
+  <h2 class="home-section__title">📝 최근 글</h2>
+  <div class="entries-grid">
+    {% for post in all_posts limit:6 %}
+      {% include archive-single.html type="grid" %}
+    {% endfor %}
+  </div>
+  <div class="home-section__more">
+    <a href="/articles/" class="btn btn--primary">더 보기 →</a>
+  </div>
+</section>
+
+<!-- 시리즈 섹션 -->
+<section class="home-section">
+  <h2 class="home-section__title">📚 시리즈</h2>
+  <div class="series-cards">
+    {% assign series_list = site.series | group_by: "series" %}
+    {% for s in series_list %}
+      {% if s.name != "" %}
+        {% assign first_post = s.items | sort: "series_order" | first %}
+        <a href="{{ first_post.url }}" class="series-card">
+          {% if first_post.header.teaser %}
+            <div class="series-card__image" style="background-image: url('{{ first_post.header.teaser }}')"></div>
+          {% else %}
+            <div class="series-card__image series-card__image--default">
+              <span>{{ s.name | slice: 0 }}</span>
+            </div>
+          {% endif %}
+          <div class="series-card__content">
+            <h3 class="series-card__title">{{ s.name }}</h3>
+            <span class="series-card__count">{{ s.items.size }}편</span>
+          </div>
+        </a>
+      {% endif %}
+    {% endfor %}
+  </div>
+  <div class="home-section__more">
+    <a href="/series/" class="btn btn--primary">전체 시리즈 →</a>
+  </div>
+</section>
+
+<!-- 카테고리 섹션 -->
+<section class="home-section">
+  <h2 class="home-section__title">🏷️ 카테고리</h2>
+  <div class="category-buttons">
+    {% assign all_categories = "" | split: "" %}
+    {% for post in all_posts %}
+      {% for cat in post.categories %}
+        {% unless all_categories contains cat %}
+          {% assign all_categories = all_categories | push: cat %}
+        {% endunless %}
+      {% endfor %}
+    {% endfor %}
+    {% for cat in all_categories %}
+      <a href="/categories/#{{ cat | slugify }}" class="category-btn">{{ cat }}</a>
+    {% endfor %}
+  </div>
+</section>

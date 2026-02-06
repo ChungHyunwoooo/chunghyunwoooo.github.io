@@ -1,6 +1,8 @@
 ---
+permalink: /articles/welcome/
 title: "블로그에 오신 것을 환영합니다!"
 date: 2024-01-01
+excerpt: "Hyunwoo's Tech Blog 소개"
 categories:
   - Projects
 tags:

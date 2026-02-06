@@ -1,4 +1,5 @@
 ---
+permalink: /articles/veer-risc-v-core/
 title: "VeeR RISC-V Core 소개"
 date: 2025-01-15
 categories:
@@ -156,6 +157,7 @@ sequenceDiagram
 3. **오픈소스**: SoC 설계에 자유롭게 활용할 수 있습니다.
 
 ---
+permalink: /articles/veer-risc-v-core/
 
 ## 참고 자료
 
