@@ -25,9 +25,6 @@ layout: archive
           <div class="series-velog__info">
             <h3 class="series-velog__title">{{ group.name }}</h3>
             <span class="series-velog__count">{{ group.items.size }}편의 시리즈</span>
-            {% if first_post.excerpt %}
-              <p class="series-velog__desc">{{ first_post.excerpt | strip_html | truncate: 100 }}</p>
-            {% endif %}
           </div>
           <span class="series-velog__arrow" data-arrow="{{ forloop.index }}">
             <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
@@ -36,23 +33,34 @@ layout: archive
           </span>
         </div>
         <div class="series-velog__body" data-panel="{{ forloop.index }}">
-          <ul class="series-velog__list">
-            {% for post in sorted_posts %}
-              <li class="series-velog__item">
-                <a href="{{ post.url | relative_url }}">
-                  <div class="series-velog__item-main">
-                    <span class="series-velog__item-order">{{ post.series_order }}</span>
-                    <div class="series-velog__item-content">
-                      <span class="series-velog__item-title">{{ post.title }}</span>
-                      {% if post.excerpt %}
-                        <span class="series-velog__item-excerpt">{{ post.excerpt | strip_html | truncate: 80 }}</span>
-                      {% endif %}
+          <div class="series-carousel">
+            <button class="series-carousel__btn series-carousel__btn--prev" data-carousel-prev="{{ forloop.index }}" aria-label="이전">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <div class="series-carousel__track" data-carousel-track="{{ forloop.index }}">
+              {% for post in sorted_posts %}
+                <a href="{{ post.url | relative_url }}" class="series-carousel__card">
+                  {% if post.header.teaser %}
+                    <div class="series-carousel__card-img" style="background-image: url('{{ post.header.teaser }}')"></div>
+                  {% else %}
+                    <div class="series-carousel__card-img" style="background: {{ gradients[gradient_index] }}">
+                      <span class="series-carousel__card-num">{{ post.series_order }}</span>
                     </div>
+                  {% endif %}
+                  <div class="series-carousel__card-body">
+                    <span class="series-carousel__card-order">{{ post.series_order }}편</span>
+                    <h4 class="series-carousel__card-title">{{ post.title }}</h4>
+                    {% if post.excerpt %}
+                      <p class="series-carousel__card-excerpt">{{ post.excerpt | strip_html | truncate: 60 }}</p>
+                    {% endif %}
                   </div>
                 </a>
-              </li>
-            {% endfor %}
-          </ul>
+              {% endfor %}
+            </div>
+            <button class="series-carousel__btn series-carousel__btn--next" data-carousel-next="{{ forloop.index }}" aria-label="다음">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+          </div>
         </div>
       </div>
     {% endif %}
@@ -61,6 +69,7 @@ layout: archive
 
 <script>
 (function() {
+  // Accordion toggle
   var toggles = document.querySelectorAll('[data-toggle]');
   toggles.forEach(function(toggle) {
     toggle.addEventListener('click', function() {
@@ -70,7 +79,6 @@ layout: archive
       var card = this.closest('.series-velog__card');
       var isOpen = panel.classList.contains('open');
 
-      // Close all
       document.querySelectorAll('.series-velog__body').forEach(function(p) { p.classList.remove('open'); });
       document.querySelectorAll('.series-velog__card').forEach(function(c) { c.classList.remove('active'); });
       document.querySelectorAll('.series-velog__arrow').forEach(function(a) { a.classList.remove('rotated'); });
@@ -81,6 +89,43 @@ layout: archive
         arrow.classList.add('rotated');
       }
     });
+  });
+
+  // Carousel navigation
+  var scrollAmount = 240;
+
+  document.querySelectorAll('[data-carousel-prev]').forEach(function(btn) {
+    btn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      var index = this.getAttribute('data-carousel-prev');
+      var track = document.querySelector('[data-carousel-track="' + index + '"]');
+      track.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+    });
+  });
+
+  document.querySelectorAll('[data-carousel-next]').forEach(function(btn) {
+    btn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      var index = this.getAttribute('data-carousel-next');
+      var track = document.querySelector('[data-carousel-track="' + index + '"]');
+      track.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+    });
+  });
+
+  // Touch swipe support
+  document.querySelectorAll('.series-carousel__track').forEach(function(track) {
+    var startX = 0;
+    var scrollStart = 0;
+
+    track.addEventListener('touchstart', function(e) {
+      startX = e.touches[0].pageX;
+      scrollStart = this.scrollLeft;
+    }, { passive: true });
+
+    track.addEventListener('touchmove', function(e) {
+      var diff = startX - e.touches[0].pageX;
+      this.scrollLeft = scrollStart + diff;
+    }, { passive: true });
   });
 })();
 </script>

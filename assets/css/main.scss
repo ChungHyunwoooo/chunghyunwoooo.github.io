@@ -32,6 +32,14 @@
   font-display: swap;
 }
 
+@font-face {
+  font-family: 'D2Coding';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_three@1.0/D2Coding.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* ==========================================================================
    Font Size Overrides (Smaller fonts)
    ========================================================================== */
@@ -49,18 +57,32 @@ $type-size-8: 0.6em !default;   // ~8px (was 0.625em)
 @import "minimal-mistakes/skins/{{ site.minimal_mistakes_skin | default: 'default' }}";
 @import "minimal-mistakes";
 
-/* CookieRun Font Application */
+/* Font Application */
+/* Body: CookieRun Regular */
+body {
+  font-family: 'CookieRun', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-weight: normal;
+}
+
+/* Headings: CookieRun Bold */
 h1, h2, h3, h4, h5, h6,
 .page__title,
 .archive__item-title,
 .site-title,
 .series-card__title,
 .series-velog__title,
-.series-accordion__title,
 .nav__title,
 .nav__sub-title,
-.masthead__menu a {
+.masthead__menu a,
+.home-section__title {
   font-family: 'CookieRun', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 700;
+}
+
+/* Code blocks: D2Coding */
+code, pre, .highlight code, .highlighter-rouge code,
+kbd, samp, tt {
+  font-family: 'D2Coding', 'Fira Code', 'Consolas', 'Monaco', monospace;
 }
 
 /* ==========================================================================
