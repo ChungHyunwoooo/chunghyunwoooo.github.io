@@ -5,34 +5,51 @@ layout: archive
 {{ content }}
 
 {% assign series_groups = site.series | group_by: "series" %}
+{% assign gradients = "linear-gradient(135deg, #667eea 0%, #764ba2 100%)|linear-gradient(135deg, #f093fb 0%, #f5576c 100%)|linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)|linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)|linear-gradient(135deg, #fa709a 0%, #fee140 100%)|linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%)" | split: "|" %}
 
-<div class="series-accordion-container">
+<div class="series-velog">
   {% for group in series_groups %}
     {% if group.name != "" %}
       {% assign sorted_posts = group.items | sort: "series_order" %}
-      <div class="series-accordion">
-        <div class="series-accordion__header" data-accordion="{{ forloop.index }}">
-          <div class="series-accordion__header-left">
-            <h3 class="series-accordion__title">{{ group.name }}</h3>
-            <span class="series-accordion__count">{{ group.items.size }}편</span>
+      {% assign first_post = sorted_posts | first %}
+      {% assign gradient_index = forloop.index0 | modulo: 6 %}
+      <div class="series-velog__card" data-series="{{ forloop.index }}">
+        <div class="series-velog__header" data-toggle="{{ forloop.index }}">
+          {% if first_post.header.teaser %}
+            <div class="series-velog__thumbnail" style="background-image: url('{{ first_post.header.teaser }}')"></div>
+          {% else %}
+            <div class="series-velog__thumbnail" style="background: {{ gradients[gradient_index] }}">
+              <span class="series-velog__thumbnail-icon">{{ group.name | slice: 0 }}</span>
+            </div>
+          {% endif %}
+          <div class="series-velog__info">
+            <h3 class="series-velog__title">{{ group.name }}</h3>
+            <span class="series-velog__count">{{ group.items.size }}편의 시리즈</span>
+            {% if first_post.excerpt %}
+              <p class="series-velog__desc">{{ first_post.excerpt | strip_html | truncate: 100 }}</p>
+            {% endif %}
           </div>
-          <span class="series-accordion__arrow" data-arrow="{{ forloop.index }}">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <span class="series-velog__arrow" data-arrow="{{ forloop.index }}">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
           </span>
         </div>
-        <div class="series-accordion__body" data-panel="{{ forloop.index }}">
-          <ul class="series-accordion__list">
+        <div class="series-velog__body" data-panel="{{ forloop.index }}">
+          <ul class="series-velog__list">
             {% for post in sorted_posts %}
-              <li class="series-accordion__item">
+              <li class="series-velog__item">
                 <a href="{{ post.url | relative_url }}">
-                  <span class="series-accordion__item-order">{{ post.series_order }}.</span>
-                  {{ post.title }}
+                  <div class="series-velog__item-main">
+                    <span class="series-velog__item-order">{{ post.series_order }}</span>
+                    <div class="series-velog__item-content">
+                      <span class="series-velog__item-title">{{ post.title }}</span>
+                      {% if post.excerpt %}
+                        <span class="series-velog__item-excerpt">{{ post.excerpt | strip_html | truncate: 80 }}</span>
+                      {% endif %}
+                    </div>
+                  </div>
                 </a>
-                {% if post.excerpt %}
-                  <p class="series-accordion__item-excerpt">{{ post.excerpt | strip_html | truncate: 120 }}</p>
-                {% endif %}
               </li>
             {% endfor %}
           </ul>
@@ -44,30 +61,23 @@ layout: archive
 
 <script>
 (function() {
-  var headers = document.querySelectorAll('.series-accordion__header');
-
-  headers.forEach(function(header) {
-    header.addEventListener('click', function() {
-      var index = this.getAttribute('data-accordion');
+  var toggles = document.querySelectorAll('[data-toggle]');
+  toggles.forEach(function(toggle) {
+    toggle.addEventListener('click', function() {
+      var index = this.getAttribute('data-toggle');
       var panel = document.querySelector('[data-panel="' + index + '"]');
       var arrow = document.querySelector('[data-arrow="' + index + '"]');
+      var card = this.closest('.series-velog__card');
       var isOpen = panel.classList.contains('open');
 
-      // Close all panels
-      document.querySelectorAll('.series-accordion__body').forEach(function(p) {
-        p.classList.remove('open');
-      });
-      document.querySelectorAll('.series-accordion__header').forEach(function(h) {
-        h.classList.remove('active');
-      });
-      document.querySelectorAll('.series-accordion__arrow').forEach(function(a) {
-        a.classList.remove('rotated');
-      });
+      // Close all
+      document.querySelectorAll('.series-velog__body').forEach(function(p) { p.classList.remove('open'); });
+      document.querySelectorAll('.series-velog__card').forEach(function(c) { c.classList.remove('active'); });
+      document.querySelectorAll('.series-velog__arrow').forEach(function(a) { a.classList.remove('rotated'); });
 
-      // Toggle current panel if it was closed
       if (!isOpen) {
         panel.classList.add('open');
-        this.classList.add('active');
+        card.classList.add('active');
         arrow.classList.add('rotated');
       }
     });

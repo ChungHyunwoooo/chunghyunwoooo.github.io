@@ -24,9 +24,6 @@
     {% endif %}
 
     <div class="series-pagination">
-      <div class="series-pagination__progress">
-        {{ page.series }} - {{ current_index | plus: 1 }} / {{ total }}
-      </div>
       <div class="series-pagination__links">
         {% if prev_post %}
           <a href="{{ prev_post.url | relative_url }}" class="series-pagination__link series-pagination__link--prev">

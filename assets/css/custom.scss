@@ -236,118 +236,179 @@
   opacity: 1;
 }
 
-/* Series Home Accordion */
-.series-accordion-container {
+/* Series Velog Style */
+.series-velog {
   margin-top: 1.5rem;
-}
-
-.series-accordion {
-  margin-bottom: 0.5rem;
-}
-
-.series-accordion__header {
-  background: #1a1a2e;
-  border: 1px solid #333;
-  border-radius: 12px;
-  padding: 1.25rem 1.5rem;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  cursor: pointer;
-  transition: all 0.3s;
+  flex-direction: column;
+  gap: 1.25rem;
+}
 
-  &:hover {
-    border-color: #00d9ff;
-  }
+.series-velog__card {
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid #333;
+  transition: border-color 0.3s;
 
   &.active {
     border-color: #00d9ff;
-    background: #1e1e35;
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
   }
 }
 
-.series-accordion__header-left {
-  display: flex;
-  align-items: baseline;
-  gap: 0.75rem;
-}
-
-.series-accordion__title {
-  color: #fff;
-  font-size: 1.2rem;
-  font-weight: 600;
-  margin: 0;
-}
-
-.series-accordion__count {
-  color: #aaa;
-  font-size: 0.9rem;
-}
-
-.series-accordion__arrow {
-  transition: transform 0.3s;
-  color: #aaa;
+.series-velog__header {
   display: flex;
   align-items: center;
+  gap: 1.25rem;
+  padding: 1.25rem;
+  background: #1a1a2e;
+  cursor: pointer;
+  transition: background 0.3s;
+
+  &:hover {
+    background: #1e1e35;
+  }
+}
+
+.series-velog__thumbnail {
+  width: 100px;
+  height: 100px;
+  min-width: 100px;
+  border-radius: 12px;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  @media (max-width: 600px) {
+    width: 72px;
+    height: 72px;
+    min-width: 72px;
+    border-radius: 8px;
+  }
+}
+
+.series-velog__thumbnail-icon {
+  font-size: 2.5rem;
+  color: #fff;
+  font-weight: 900;
+  font-family: 'CookieRun', sans-serif;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+
+  @media (max-width: 600px) {
+    font-size: 1.8rem;
+  }
+}
+
+.series-velog__info {
+  flex: 1;
+  min-width: 0;
+}
+
+.series-velog__title {
+  color: #fff;
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin: 0 0 0.25rem 0;
+
+  @media (max-width: 600px) {
+    font-size: 1.1rem;
+  }
+}
+
+.series-velog__count {
+  color: #00d9ff;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.series-velog__desc {
+  color: #aaa;
+  font-size: 0.85rem;
+  margin: 0.5rem 0 0;
+  line-height: 1.5;
+
+  @media (max-width: 600px) {
+    display: none;
+  }
+}
+
+.series-velog__arrow {
+  color: #666;
+  transition: transform 0.3s, color 0.3s;
+  display: flex;
+  align-items: center;
+  min-width: 20px;
 
   &.rotated {
     transform: rotate(180deg);
+    color: #00d9ff;
   }
 }
 
-.series-accordion__body {
+.series-velog__body {
   max-height: 0;
   overflow: hidden;
   transition: max-height 0.4s ease;
-  background: #1a1a2e;
-  border-left: 1px solid #333;
-  border-right: 1px solid #333;
-  border-bottom: 1px solid #333;
-  border-radius: 0 0 12px 12px;
+  background: #151525;
 
   &.open {
     max-height: 2000px;
   }
 }
 
-.series-accordion__list {
-  padding: 0.5rem 1rem 1rem;
+.series-velog__list {
   list-style: none;
   margin: 0;
+  padding: 0;
 }
 
-.series-accordion__item {
-  padding: 0.75rem 1rem;
-  border-bottom: 1px solid #2d2d44;
-
-  &:last-child {
-    border-bottom: none;
-  }
+.series-velog__item {
+  border-top: 1px solid #222;
 
   a {
-    color: #ccc;
-    text-decoration: none;
     display: block;
+    padding: 1rem 1.25rem;
+    text-decoration: none;
+    transition: background 0.2s;
 
     &:hover {
-      color: #00d9ff;
+      background: #1a1a2e;
     }
   }
 }
 
-.series-accordion__item-order {
-  color: #00d9ff;
-  font-weight: 600;
-  margin-right: 0.5rem;
+.series-velog__item-main {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
 }
 
-.series-accordion__item-excerpt {
-  color: #888;
-  font-size: 0.85rem;
+.series-velog__item-order {
+  color: #00d9ff;
+  font-weight: 700;
+  font-size: 1.1rem;
+  min-width: 24px;
+  font-family: 'CookieRun', sans-serif;
+}
+
+.series-velog__item-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.series-velog__item-title {
+  color: #e0e0e0;
+  font-size: 0.95rem;
+  font-weight: 500;
+  display: block;
+}
+
+.series-velog__item-excerpt {
+  color: #777;
+  font-size: 0.8rem;
+  display: block;
   margin-top: 0.25rem;
-  margin-bottom: 0;
 }
 
 /* Series Pagination */
@@ -357,25 +418,22 @@
   border-top: 1px solid #333;
 }
 
-.series-pagination__progress {
-  text-align: center;
-  color: #aaa;
-  font-size: 0.9rem;
-  margin-bottom: 1rem;
-}
-
 .series-pagination__links {
   display: flex;
   justify-content: space-between;
   gap: 1rem;
+
+  @media (max-width: 600px) {
+    flex-direction: column;
+  }
 }
 
 .series-pagination__link {
   flex: 1;
-  padding: 1rem;
+  padding: 1rem 1.25rem;
   background: #1a1a2e;
   border: 1px solid #333;
-  border-radius: 8px;
+  border-radius: 12px;
   text-decoration: none;
   transition: all 0.3s;
   display: block;
@@ -383,6 +441,7 @@
   &:hover {
     border-color: #00d9ff;
     transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 217, 255, 0.1);
   }
 
   &--prev {
@@ -395,6 +454,10 @@
 
   &--disabled {
     visibility: hidden;
+
+    @media (max-width: 600px) {
+      display: none;
+    }
   }
 }
 
@@ -409,4 +472,5 @@
   font-size: 0.95rem;
   margin-top: 0.25rem;
   display: block;
+  font-weight: 500;
 }

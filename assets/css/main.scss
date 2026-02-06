@@ -5,6 +5,34 @@
 @charset "utf-8";
 
 /* ==========================================================================
+   CookieRun Font
+   ========================================================================== */
+
+@font-face {
+  font-family: 'CookieRun';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/CookieRun-Regular.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'CookieRun';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_twelve@1.0/CookieRunOTF-Bold00.woff') format('woff');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'CookieRun';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_twelve@1.0/CookieRunOTF-Black00.woff') format('woff');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ==========================================================================
    Font Size Overrides (Smaller fonts)
    ========================================================================== */
 
@@ -20,6 +48,20 @@ $type-size-8: 0.6em !default;   // ~8px (was 0.625em)
 
 @import "minimal-mistakes/skins/{{ site.minimal_mistakes_skin | default: 'default' }}";
 @import "minimal-mistakes";
+
+/* CookieRun Font Application */
+h1, h2, h3, h4, h5, h6,
+.page__title,
+.archive__item-title,
+.site-title,
+.series-card__title,
+.series-velog__title,
+.series-accordion__title,
+.nav__title,
+.nav__sub-title,
+.masthead__menu a {
+  font-family: 'CookieRun', -apple-system, BlinkMacSystemFont, sans-serif;
+}
 
 /* ==========================================================================
    Custom Animations
