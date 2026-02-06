@@ -11,6 +11,8 @@ tags:
   - Customization
 series: "Jekyll 블로그 마스터"
 series_order: 5
+header:
+  teaser: "https://jekyllrb-ko.github.io/img/logo-2x.png"
 ---
 
 minimal-mistakes 테마를 기준으로 Jekyll 블로그를 커스터마이징하는 방법을 다룬다.

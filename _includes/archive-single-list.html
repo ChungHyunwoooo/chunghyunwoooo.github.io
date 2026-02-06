@@ -1,0 +1,37 @@
+{% if post.header.teaser %}
+  {% capture teaser %}{{ post.header.teaser }}{% endcapture %}
+{% else %}
+  {% assign teaser = nil %}
+{% endif %}
+
+{% if post.id %}
+  {% assign title = post.title | markdownify | remove: "<p>" | remove: "</p>" %}
+{% else %}
+  {% assign title = post.title %}
+{% endif %}
+
+<article class="community-list__item" itemscope itemtype="https://schema.org/CreativeWork">
+  <a href="{{ post.url | relative_url }}" class="community-list__link" rel="permalink">
+    <div class="community-list__thumb">
+      {% if teaser %}
+        <img src="{{ teaser }}" alt="{{ title }}">
+      {% else %}
+        <span class="community-list__thumb-default">{{ title | slice: 0 }}</span>
+      {% endif %}
+    </div>
+    <div class="community-list__body">
+      <h3 class="community-list__title" itemprop="headline">{{ title }}</h3>
+      <p class="community-list__meta">
+        {% if post.date %}
+          <time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%Y-%m-%d" }}</time>
+        {% endif %}
+        {% if post.series %}
+          <span class="community-list__series">{{ post.series }}</span>
+        {% endif %}
+      </p>
+      {% if post.excerpt %}
+        <p class="community-list__excerpt" itemprop="description">{{ post.excerpt | markdownify | strip_html | truncate: 100 }}</p>
+      {% endif %}
+    </div>
+  </a>
+</article>

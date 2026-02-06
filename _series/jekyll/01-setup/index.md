@@ -11,6 +11,8 @@ tags:
   - Blog
 series: "Jekyll 블로그 마스터"
 series_order: 1
+header:
+  teaser: "https://jekyllrb-ko.github.io/img/logo-2x.png"
 ---
 
 Jekyll과 GitHub Pages로 무료 블로그를 구축하는 방법을 다룬다.

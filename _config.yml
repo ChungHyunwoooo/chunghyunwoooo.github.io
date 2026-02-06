@@ -160,12 +160,10 @@ defaults:
       read_time: true
       comments: true
       share: false
-      related: true
+      related: false
       show_date: true
       toc: true
       toc_sticky: true
-      sidebar:
-        - nav: "series"
   # _articles (단일 글)
   - scope:
       path: ""
@@ -176,7 +174,7 @@ defaults:
       read_time: true
       comments: true
       share: false
-      related: true
+      related: false
       show_date: true
       toc: true
       toc_sticky: true

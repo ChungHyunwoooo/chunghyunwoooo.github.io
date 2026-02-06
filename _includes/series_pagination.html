@@ -4,8 +4,6 @@
 
   {% if total > 1 %}
     {% assign current_order = page.series_order %}
-    {% assign prev_post = nil %}
-    {% assign next_post = nil %}
 
     {% for post in all_in_series %}
       {% if post.series_order == current_order %}
@@ -23,26 +21,29 @@
       {% assign next_post = all_in_series[next_index] %}
     {% endif %}
 
-    <div class="series-pagination">
-      <div class="series-pagination__links">
-        {% if prev_post %}
-          <a href="{{ prev_post.url | relative_url }}" class="series-pagination__link series-pagination__link--prev">
-            <span class="series-pagination__label">&larr; 이전</span>
-            <span class="series-pagination__title">{{ prev_post.title }}</span>
-          </a>
-        {% else %}
-          <span class="series-pagination__link series-pagination__link--prev series-pagination__link--disabled"></span>
-        {% endif %}
-
-        {% if next_post %}
-          <a href="{{ next_post.url | relative_url }}" class="series-pagination__link series-pagination__link--next">
-            <span class="series-pagination__label">다음 &rarr;</span>
-            <span class="series-pagination__title">{{ next_post.title }}</span>
-          </a>
-        {% else %}
-          <span class="series-pagination__link series-pagination__link--next series-pagination__link--disabled"></span>
-        {% endif %}
-      </div>
-    </div>
+    <nav class="series-nav">
+      {% if prev_post %}
+        <a href="{{ prev_post.url | relative_url }}" class="series-nav__link series-nav__link--prev">
+          <span class="series-nav__arrow">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+          <span class="series-nav__text">
+            <span class="series-nav__label">이전 글</span>
+            <span class="series-nav__title">{{ prev_post.title }}</span>
+          </span>
+        </a>
+      {% endif %}
+      {% if next_post %}
+        <a href="{{ next_post.url | relative_url }}" class="series-nav__link series-nav__link--next">
+          <span class="series-nav__text">
+            <span class="series-nav__label">다음 글</span>
+            <span class="series-nav__title">{{ next_post.title }}</span>
+          </span>
+          <span class="series-nav__arrow">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+        </a>
+      {% endif %}
+    </nav>
   {% endif %}
 {% endif %}

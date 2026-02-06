@@ -5,32 +5,10 @@
 @charset "utf-8";
 
 /* ==========================================================================
-   CookieRun Font
+   Web Fonts
    ========================================================================== */
 
-@font-face {
-  font-family: 'CookieRun';
-  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/CookieRun-Regular.woff') format('woff');
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'CookieRun';
-  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_twelve@1.0/CookieRunOTF-Bold00.woff') format('woff');
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'CookieRun';
-  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_twelve@1.0/CookieRunOTF-Black00.woff') format('woff');
-  font-weight: 900;
-  font-style: normal;
-  font-display: swap;
-}
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap');
 
 @font-face {
   font-family: 'D2Coding';
@@ -58,13 +36,13 @@ $type-size-8: 0.6em !default;   // ~8px (was 0.625em)
 @import "minimal-mistakes";
 
 /* Font Application */
-/* Body: CookieRun Regular */
+/* Body: Noto Sans KR */
 body {
-  font-family: 'CookieRun', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  font-weight: normal;
+  font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-weight: 400;
 }
 
-/* Headings: CookieRun Bold */
+/* Headings: Noto Sans KR Medium/Bold */
 h1, h2, h3, h4, h5, h6,
 .page__title,
 .archive__item-title,
@@ -75,7 +53,7 @@ h1, h2, h3, h4, h5, h6,
 .nav__sub-title,
 .masthead__menu a,
 .home-section__title {
-  font-family: 'CookieRun', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
   font-weight: 700;
 }
 

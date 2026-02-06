@@ -1,6 +1,65 @@
 {% if page.author_profile or layout.author_profile or page.sidebar %}
   <div class="sidebar sticky">
   {% if page.author_profile or layout.author_profile %}{% include author-profile.html %}{% endif %}
+
+  {% comment %} Series navigation {% endcomment %}
+  {% assign series_groups = site.series | group_by: "series" %}
+  {% assign has_series = false %}
+  {% for sg in series_groups %}
+    {% if sg.name != "" %}{% assign has_series = true %}{% break %}{% endif %}
+  {% endfor %}
+  {% if has_series %}
+  <nav class="sidebar-nav">
+    <h3 class="sidebar-nav__title">Series</h3>
+    <ul class="sidebar-nav__list">
+      {% for sg in series_groups %}
+        {% if sg.name != "" %}
+          {% assign first_post = sg.items | sort: "series_order" | first %}
+          <li class="sidebar-nav__item">
+            <a href="{{ first_post.url | relative_url }}">
+              {{ sg.name }}
+              <span class="sidebar-nav__count">{{ sg.items.size }}</span>
+            </a>
+          </li>
+        {% endif %}
+      {% endfor %}
+    </ul>
+  </nav>
+  {% endif %}
+
+  {% comment %} Categories navigation {% endcomment %}
+  {% assign all_posts = site.series | concat: site.articles %}
+  {% assign cat_list = "" | split: "" %}
+  {% for p in all_posts %}
+    {% for c in p.categories %}
+      {% unless cat_list contains c %}
+        {% assign cat_list = cat_list | push: c %}
+      {% endunless %}
+    {% endfor %}
+  {% endfor %}
+  {% assign cat_list = cat_list | sort %}
+  {% if cat_list.size > 0 %}
+  <nav class="sidebar-nav">
+    <h3 class="sidebar-nav__title">Categories</h3>
+    <ul class="sidebar-nav__list">
+      {% for cat in cat_list %}
+        {% assign cat_count = 0 %}
+        {% for p in all_posts %}
+          {% if p.categories contains cat %}
+            {% assign cat_count = cat_count | plus: 1 %}
+          {% endif %}
+        {% endfor %}
+        <li class="sidebar-nav__item">
+          <a href="/categories/#{{ cat | slugify }}">
+            {{ cat }}
+            <span class="sidebar-nav__count">{{ cat_count }}</span>
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+  </nav>
+  {% endif %}
+
   {% if page.sidebar %}
     {% for s in page.sidebar %}
       {% if s.image %}

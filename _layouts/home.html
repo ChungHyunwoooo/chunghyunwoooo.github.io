@@ -48,20 +48,3 @@ layout: archive
   </div>
 </section>
 
-<!-- 카테고리 섹션 -->
-<section class="home-section">
-  <h2 class="home-section__title">🏷️ 카테고리</h2>
-  <div class="category-buttons">
-    {% assign all_categories = "" | split: "" %}
-    {% for post in all_posts %}
-      {% for cat in post.categories %}
-        {% unless all_categories contains cat %}
-          {% assign all_categories = all_categories | push: cat %}
-        {% endunless %}
-      {% endfor %}
-    {% endfor %}
-    {% for cat in all_categories %}
-      <a href="/categories/#{{ cat | slugify }}" class="category-btn">{{ cat }}</a>
-    {% endfor %}
-  </div>
-</section>

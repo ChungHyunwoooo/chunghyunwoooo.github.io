@@ -1,12 +1,8 @@
 main:
   - title: "Home"
     url: /
-  - title: "Series"
-    url: /series/
   - title: "Articles"
     url: /articles/
-  - title: "Categories"
-    url: /categories/
   - title: "Tags"
     url: /tags/
   - title: "About"

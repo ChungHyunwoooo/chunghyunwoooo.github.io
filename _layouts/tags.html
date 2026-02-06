@@ -20,10 +20,10 @@ layout: archive
 {% for tag in tags_list %}
   <section id="{{ tag | slugify }}" class="taxonomy__section">
     <h2 class="archive__subtitle">{{ tag }}</h2>
-    <div class="entries-list">
+    <div class="community-list">
       {% for post in all_posts %}
         {% if post.tags contains tag %}
-          {% include archive-single.html type="list" %}
+          {% include archive-single-list.html %}
         {% endif %}
       {% endfor %}
     </div>

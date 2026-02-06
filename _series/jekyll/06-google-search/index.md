@@ -11,6 +11,8 @@ tags:
   - Google
 series: "Jekyll 블로그 마스터"
 series_order: 6
+header:
+  teaser: "https://jekyllrb-ko.github.io/img/logo-2x.png"
 ---
 
 블로그를 만들었으면 Google 검색에 노출시켜야 한다.

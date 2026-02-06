@@ -11,6 +11,8 @@ tags:
   - Blog
 series: "Jekyll 블로그 마스터"
 series_order: 4
+header:
+  teaser: "https://jekyllrb-ko.github.io/img/logo-2x.png"
 ---
 
 Jekyll Collections를 사용하여 튜토리얼/시리즈를 효과적으로 관리하는 방법을 다룬다.

@@ -11,6 +11,8 @@ tags:
   - Blog
 series: "Jekyll 블로그 마스터"
 series_order: 3
+header:
+  teaser: "https://jekyllrb-ko.github.io/img/logo-2x.png"
 ---
 
 Jekyll에서 블로그 포스트를 작성하는 방법을 다룬다.

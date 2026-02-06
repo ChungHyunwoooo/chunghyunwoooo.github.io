@@ -3,8 +3,6 @@ permalink: /about/
 title: "About"
 ---
 
-# About Me
-
 안녕하세요! **HW/SW 공동설계**와 **AI/ML 엔지니어링**에 관심있는 개발자입니다.
 
 ## 관심 분야

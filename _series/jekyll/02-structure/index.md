@@ -10,6 +10,8 @@ tags:
   - Blog
 series: "Jekyll 블로그 마스터"
 series_order: 2
+header:
+  teaser: "https://jekyllrb-ko.github.io/img/logo-2x.png"
 ---
 
 Jekyll 프로젝트의 폴더 구조와 각 파일의 역할을 이해한다.
