@@ -1,0 +1,51 @@
+{% if page.collection == "series" and page.series %}
+  {% assign all_in_series = site.series | where: "series", page.series | sort: "series_order" %}
+  {% assign total = all_in_series.size %}
+
+  {% if total > 1 %}
+    {% assign current_order = page.series_order %}
+    {% assign prev_post = nil %}
+    {% assign next_post = nil %}
+
+    {% for post in all_in_series %}
+      {% if post.series_order == current_order %}
+        {% assign current_index = forloop.index0 %}
+      {% endif %}
+    {% endfor %}
+
+    {% if current_index > 0 %}
+      {% assign prev_index = current_index | minus: 1 %}
+      {% assign prev_post = all_in_series[prev_index] %}
+    {% endif %}
+
+    {% assign next_index = current_index | plus: 1 %}
+    {% if next_index < total %}
+      {% assign next_post = all_in_series[next_index] %}
+    {% endif %}
+
+    <div class="series-pagination">
+      <div class="series-pagination__progress">
+        {{ page.series }} - {{ current_index | plus: 1 }} / {{ total }}
+      </div>
+      <div class="series-pagination__links">
+        {% if prev_post %}
+          <a href="{{ prev_post.url | relative_url }}" class="series-pagination__link series-pagination__link--prev">
+            <span class="series-pagination__label">&larr; 이전</span>
+            <span class="series-pagination__title">{{ prev_post.title }}</span>
+          </a>
+        {% else %}
+          <span class="series-pagination__link series-pagination__link--prev series-pagination__link--disabled"></span>
+        {% endif %}
+
+        {% if next_post %}
+          <a href="{{ next_post.url | relative_url }}" class="series-pagination__link series-pagination__link--next">
+            <span class="series-pagination__label">다음 &rarr;</span>
+            <span class="series-pagination__title">{{ next_post.title }}</span>
+          </a>
+        {% else %}
+          <span class="series-pagination__link series-pagination__link--next series-pagination__link--disabled"></span>
+        {% endif %}
+      </div>
+    </div>
+  {% endif %}
+{% endif %}

@@ -1,9 +1,7 @@
 ---
 title: "Series"
 permalink: /series/
-layout: collection
-collection: series
-entries_layout: grid
+layout: series_home
 classes: wide
 ---
 

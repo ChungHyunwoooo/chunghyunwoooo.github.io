@@ -1,0 +1,76 @@
+---
+layout: archive
+---
+
+{{ content }}
+
+{% assign series_groups = site.series | group_by: "series" %}
+
+<div class="series-accordion-container">
+  {% for group in series_groups %}
+    {% if group.name != "" %}
+      {% assign sorted_posts = group.items | sort: "series_order" %}
+      <div class="series-accordion">
+        <div class="series-accordion__header" data-accordion="{{ forloop.index }}">
+          <div class="series-accordion__header-left">
+            <h3 class="series-accordion__title">{{ group.name }}</h3>
+            <span class="series-accordion__count">{{ group.items.size }}편</span>
+          </div>
+          <span class="series-accordion__arrow" data-arrow="{{ forloop.index }}">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+        </div>
+        <div class="series-accordion__body" data-panel="{{ forloop.index }}">
+          <ul class="series-accordion__list">
+            {% for post in sorted_posts %}
+              <li class="series-accordion__item">
+                <a href="{{ post.url | relative_url }}">
+                  <span class="series-accordion__item-order">{{ post.series_order }}.</span>
+                  {{ post.title }}
+                </a>
+                {% if post.excerpt %}
+                  <p class="series-accordion__item-excerpt">{{ post.excerpt | strip_html | truncate: 120 }}</p>
+                {% endif %}
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    {% endif %}
+  {% endfor %}
+</div>
+
+<script>
+(function() {
+  var headers = document.querySelectorAll('.series-accordion__header');
+
+  headers.forEach(function(header) {
+    header.addEventListener('click', function() {
+      var index = this.getAttribute('data-accordion');
+      var panel = document.querySelector('[data-panel="' + index + '"]');
+      var arrow = document.querySelector('[data-arrow="' + index + '"]');
+      var isOpen = panel.classList.contains('open');
+
+      // Close all panels
+      document.querySelectorAll('.series-accordion__body').forEach(function(p) {
+        p.classList.remove('open');
+      });
+      document.querySelectorAll('.series-accordion__header').forEach(function(h) {
+        h.classList.remove('active');
+      });
+      document.querySelectorAll('.series-accordion__arrow').forEach(function(a) {
+        a.classList.remove('rotated');
+      });
+
+      // Toggle current panel if it was closed
+      if (!isOpen) {
+        panel.classList.add('open');
+        this.classList.add('active');
+        arrow.classList.add('rotated');
+      }
+    });
+  });
+})();
+</script>

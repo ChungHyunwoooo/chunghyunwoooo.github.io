@@ -1,0 +1,60 @@
+<script>
+  (function() {
+    'use strict';
+
+    // SVG icons
+    const copyIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>';
+    const checkIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+
+    function addCopyButtons() {
+      const codeBlocks = document.querySelectorAll('div.highlighter-rouge');
+
+      codeBlocks.forEach(function(block) {
+        // Make block positioned for absolute button positioning
+        block.style.position = 'relative';
+
+        // Create copy button
+        const button = document.createElement('button');
+        button.className = 'code-copy-btn';
+        button.innerHTML = copyIcon;
+        button.setAttribute('aria-label', 'Copy code to clipboard');
+        button.setAttribute('title', 'Copy code');
+
+        // Add click handler
+        button.addEventListener('click', function() {
+          const codeElement = block.querySelector('pre.highlight code');
+          if (!codeElement) return;
+
+          const textToCopy = codeElement.textContent;
+
+          // Use Clipboard API
+          navigator.clipboard.writeText(textToCopy).then(function() {
+            // Success feedback
+            button.classList.add('copied');
+            button.innerHTML = checkIcon;
+            button.setAttribute('title', 'Copied!');
+
+            // Revert after 2 seconds
+            setTimeout(function() {
+              button.classList.remove('copied');
+              button.innerHTML = copyIcon;
+              button.setAttribute('title', 'Copy code');
+            }, 2000);
+          }).catch(function(err) {
+            console.error('Failed to copy:', err);
+          });
+        });
+
+        // Insert button into code block
+        block.appendChild(button);
+      });
+    }
+
+    // Run on DOM ready
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', addCopyButtons);
+    } else {
+      addCopyButtons();
+    }
+  })();
+</script>
