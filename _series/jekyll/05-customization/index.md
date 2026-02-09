@@ -2,7 +2,7 @@
 title: "Jekyll 테마 커스터마이징"
 permalink: /series/jekyll/05-customization/
 date: 2026-02-06
-excerpt: "minimal-mistakes 테마 스킨, 레이아웃, 스타일 수정"
+excerpt: "minimal-mistakes를 안전하게 확장하는 스킨, CSS, 레이아웃 수정 전략"
 categories:
   - Software
 tags:
@@ -15,177 +15,147 @@ header:
   teaser: "https://jekyllrb-ko.github.io/img/logo-2x.png"
 ---
 
-minimal-mistakes 테마를 기준으로 Jekyll 블로그를 커스터마이징하는 방법을 다룬다.
+테마 커스터마이징의 핵심은 "많이 바꾸는 것"이 아니라 "안전하게 바꾸는 것"이다.  
+이 글은 minimal-mistakes 기준으로 업데이트 충돌을 줄이면서 디자인을 바꾸는 방법을 정리한다.
 
 ---
 
-## 1. 스킨 변경
+## 이 글에서 해결하는 문제
 
-### 1.1. 기본 제공 스킨
+- 테마 파일을 직접 수정했다가 업데이트 때 깨지는 문제
+- CSS가 어디서 먹는지 몰라 반복 수정하는 문제
+- 글 가독성을 높이고 싶은데 기준이 없는 문제
+
+---
+
+## 먼저 용어 3개 정리
+
+### 1) 스킨 (skin)
+
+기본 색상과 톤을 정하는 테마 프리셋.
+
+작은 예시:
+
+- `minimal_mistakes_skin: "air"`
+
+### 2) 오버라이드 (override)
+
+기존 규칙을 유지한 채, 필요한 부분만 덮어쓰는 방식.
+
+작은 예시:
+
+- 기본 `a` 스타일은 유지하고 `text-underline-offset`만 변경
+
+### 3) 레이아웃 오버라이드
+
+테마 레이아웃 파일 일부를 복사해 필요한 지점만 수정.
+
+작은 예시:
+
+- `_layouts/single.html`에 시리즈 내비게이션 include 추가
+
+---
+
+## 1. 가장 안전한 순서
+
+1. 스킨 선택
+2. CSS 오버라이드
+3. 레이아웃 오버라이드
+
+이 순서를 지키면 수정 범위가 단계적으로 늘어나 디버깅이 쉽다.
+
+---
+
+## 2. 스킨 먼저 고르기
 
 `_config.yml`:
 
 ```yaml
-minimal_mistakes_skin: "dark"
+minimal_mistakes_skin: "default"
 ```
 
-**사용 가능한 스킨:**
+선택 예시: `default`, `air`, `aqua`, `contrast`, `dark`, `mint`, `sunrise`
 
-| 스킨 | 설명 |
-|------|------|
-| `default` | 기본 흰색 |
-| `air` | 밝은 파란색 |
-| `aqua` | 청록색 |
-| `contrast` | 고대비 |
-| `dark` | 다크 모드 |
-| `dirt` | 갈색 톤 |
-| `neon` | 네온 느낌 |
-| `mint` | 민트색 |
-| `plum` | 자주색 |
-| `sunrise` | 따뜻한 톤 |
+작은 팁:
+
+- 스킨만 바꿔도 가독성 대부분이 해결될 수 있다.
 
 ---
 
-## 2. CSS 오버라이드
-
-### 2.1. 커스텀 CSS 파일 생성
+## 3. CSS 오버라이드
 
 `assets/css/main.scss`:
 
 ```scss
 ---
-# Front matter 필수
+# Front matter required
 ---
 
 @import "minimal-mistakes/skins/{{ site.minimal_mistakes_skin | default: 'default' }}";
 @import "minimal-mistakes";
 
-// 커스텀 스타일
 .page__content {
   font-size: 1rem;
+  line-height: 1.8;
 }
 
-// 코드 블록 스타일
-div.highlighter-rouge {
-  margin: 1em 0;
-}
-
-// 링크 색상
 a {
-  color: #1e90ff;
-  &:hover {
-    color: #ff6347;
-  }
+  text-underline-offset: 2px;
 }
 ```
 
----
+중요 포인트:
 
-### 2.2. 변수 오버라이드
-
-`_sass/_variables.scss`:
-
-```scss
-// 폰트
-$serif: Georgia, Times, serif;
-$sans-serif: -apple-system, BlinkMacSystemFont, "Roboto", "Segoe UI", sans-serif;
-$monospace: "Fira Code", Consolas, Monaco, monospace;
-
-// 색상
-$primary-color: #1e90ff;
-$background-color: #1a1a2e;
-$text-color: #e0e0e0;
-$link-color: #00d9ff;
-
-// 크기
-$max-width: 1400px;
-```
+- 상단 Front Matter가 없으면 SCSS 처리 안 됨
+- 커스텀 규칙은 import 아래에 작성
 
 ---
 
-## 3. 폰트 변경
-
-### 3.1. Google Fonts 추가
+## 4. 폰트 적용 (가독성의 체감이 큼)
 
 `_includes/head/custom.html`:
 
 ```html
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&family=Fira+Code&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
 ```
 
-### 3.2. CSS 적용
+`assets/css/main.scss`:
 
 ```scss
 body {
-  font-family: 'Noto Sans KR', sans-serif;
+  font-family: "Noto Sans KR", sans-serif;
 }
 
-code, pre {
-  font-family: 'Fira Code', monospace;
+code,
+pre {
+  font-family: "Fira Code", monospace;
 }
 ```
 
 ---
 
-## 4. 레이아웃 수정
+## 5. 레이아웃 오버라이드 원칙
 
-### 4.1. 레이아웃 오버라이드
+원칙:
 
-테마 레이아웃을 수정하려면 복사 후 수정:
+- 필요한 파일만 복사
+- 원본 전체 복제 금지
 
-```bash
-# 테마 위치 확인
-bundle info minimal-mistakes-jekyll
+작은 예시 (`_layouts/single.html`):
 
-# 필요한 파일 복사
-cp /path/to/theme/_layouts/single.html _layouts/
-```
-
-### 4.2. 예: 포스트 하단에 시리즈 네비게이션 추가
-
-`_layouts/single.html` 수정:
-
-```html
-{% raw %}<!-- 본문 끝 부분에 추가 -->
-{% if page.series %}
+```liquid
+{% raw %}{% if page.series %}
   {% include series-nav.html %}
 {% endif %}{% endraw %}
 ```
 
 ---
 
-## 5. 사이드바 커스터마이징
+## 6. 운영 기능 연결
 
-### 5.1. 프로필 정보
-
-`_config.yml`:
-
-```yaml
-author:
-  name: "Hyunwoo"
-  avatar: "/assets/images/bio-photo.jpg"
-  bio: "HW/SW 공동설계 & AI/ML"
-  location: "Korea"
-  links:
-    - label: "GitHub"
-      icon: "fab fa-fw fa-github"
-      url: "https://github.com/username"
-    - label: "LinkedIn"
-      icon: "fab fa-fw fa-linkedin"
-      url: "https://linkedin.com/in/username"
-```
-
-### 5.2. 커스텀 사이드바
-
-`_includes/sidebar.html` 오버라이드 또는 `_data/navigation.yml` 수정.
-
----
-
-## 6. 네비게이션 메뉴
-
-### 6.1. 상단 메뉴
+### 네비게이션 데이터
 
 `_data/navigation.yml`:
 
@@ -193,177 +163,48 @@ author:
 main:
   - title: "Posts"
     url: /posts/
-  - title: "Tutorials"
+  - title: "Series"
     url: /series/
-  - title: "Categories"
-    url: /categories/
-  - title: "Tags"
-    url: /tags/
   - title: "About"
     url: /about/
 ```
 
-### 6.2. 드롭다운 메뉴
+### 검색/댓글/분석
 
-```yaml
-main:
-  - title: "Posts"
-    url: /posts/
-  - title: "Tutorials"
-    url: /series/
-    children:
-      - title: "Jekyll"
-        url: /series/jekyll/01-setup/
-      - title: "SystemC"
-        url: /series/systemc/01-install/
-```
-
----
-
-## 7. 댓글 시스템
-
-### 7.1. Utterances (GitHub Issues 기반)
-
-`_config.yml`:
-
-```yaml
-comments:
-  provider: "utterances"
-  utterances:
-    theme: "github-dark"
-    issue_term: "pathname"
-    repo: "username/username.github.io"
-```
-
-### 7.2. Disqus
-
-```yaml
-comments:
-  provider: "disqus"
-  disqus:
-    shortname: "your-disqus-shortname"
-```
-
----
-
-## 8. 검색 기능
-
-### 8.1. 내장 검색
+`_config.yml` 예시:
 
 ```yaml
 search: true
 search_full_content: true
-```
 
-### 8.2. Algolia 검색
+comments:
+  provider: "utterances"
+  utterances:
+    repo: "username/username.github.io"
+    issue_term: "pathname"
+    theme: "github-light"
 
-```yaml
-search: true
-search_provider: algolia
-algolia:
-  application_id: YOUR_APP_ID
-  index_name: YOUR_INDEX_NAME
-  search_only_api_key: YOUR_API_KEY
-```
-
----
-
-## 9. SEO 최적화
-
-### 9.1. 메타 태그
-
-`_config.yml`:
-
-```yaml
-title: "Hyunwoo's Tech Blog"
-description: "HW/SW 공동설계, AI/ML 개발 블로그"
-url: "https://username.github.io"
-twitter:
-  username: "your_twitter"
-og_image: "/assets/images/og-image.png"
-```
-
-### 9.2. 포스트별 SEO
-
-```yaml
----
-title: "포스트 제목"
-excerpt: "검색 결과에 표시될 요약"
----
-```
-
----
-
-## 10. 애널리틱스
-
-### 10.1. Google Analytics
-
-```yaml
 analytics:
   provider: "google-gtag"
   google:
     tracking_id: "G-XXXXXXXXXX"
-    anonymize_ip: false
 ```
 
 ---
 
-## 11. 유용한 커스터마이징 팁
+## 7. 트러블슈팅
 
-### 11.1. 목차 스타일
-
-```scss
-.toc {
-  background: #2d2d2d;
-  border-radius: 8px;
-  padding: 1rem;
-}
-```
-
-### 11.2. 코드 블록 라인 넘버
-
-```yaml
-kramdown:
-  syntax_highlighter_opts:
-    block:
-      line_numbers: true
-```
-
-### 11.3. 읽기 시간 한글화
-
-`_includes/page__meta.html` 오버라이드:
-
-```html
-{% raw %}{% if document.read_time %}
-  <span class="page__meta-readtime">
-    <i class="far fa-clock"></i>
-    약 {{ document.content | number_of_words | divided_by: 200 | plus: 1 }}분
-  </span>
-{% endif %}{% endraw %}
-```
+- CSS 변경이 반영되지 않음: `main.scss` Front Matter 확인
+- 레이아웃 적용이 안 됨: Front Matter의 `layout` 값 확인
+- 모바일 깨짐: 본문 폭/폰트 크기/코드 블록 overflow 확인
 
 ---
 
-## 12. 정리
+## 8. 최종 체크리스트
 
-| 커스터마이징 | 파일 |
-|-------------|------|
-| 스킨 변경 | `_config.yml` |
-| CSS 수정 | `assets/css/main.scss` |
-| 변수 수정 | `_sass/_variables.scss` |
-| 레이아웃 | `_layouts/*.html` |
-| Include | `_includes/*.html` |
-| 네비게이션 | `_data/navigation.yml` |
-| 폰트 | `_includes/head/custom.html` |
+- 스킨 선택 완료
+- CSS 오버라이드 최소 범위로 반영
+- 레이아웃 오버라이드 파일 최소화
+- 모바일/데스크톱에서 가독성 확인
 
----
-
-## 시리즈 완료
-
-이것으로 Jekyll 블로그 마스터 시리즈를 마친다.
-
-1. [구축 - GitHub Pages 배포](/series/jekyll/01-setup/)
-2. [폴더 구조 이해](/series/jekyll/02-structure/)
-3. [포스트 작성법](/series/jekyll/03-posts/)
-4. [Collections 시리즈 관리](/series/jekyll/04-collections/)
-5. [테마 커스터마이징](/series/jekyll/05-customization/) ← 현재 글
+다음 글에서 검색 노출(Google) 설정을 같은 방식으로 끝낸다.

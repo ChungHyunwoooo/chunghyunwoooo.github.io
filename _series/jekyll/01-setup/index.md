@@ -2,7 +2,7 @@
 title: "Jekyll 블로그 구축 - GitHub Pages 배포"
 permalink: /series/jekyll/01-setup/
 date: 2026-02-06
-excerpt: "Jekyll 설치부터 GitHub Pages 배포까지"
+excerpt: "처음부터 배포까지, 왜 필요한지 설명하고 바로 동작하게 만드는 Jekyll 입문 가이드"
 categories:
   - Software
 tags:
@@ -15,104 +15,152 @@ header:
   teaser: "https://jekyllrb-ko.github.io/img/logo-2x.png"
 ---
 
-Jekyll과 GitHub Pages로 무료 블로그를 구축하는 방법을 다룬다.
+처음 블로그를 만들 때 가장 어려운 지점은 "무엇을 어디까지 해야 끝난 것인지"가 모호하다는 점이다.  
+이 글은 설치, 로컬 실행, GitHub Pages 배포, 확인까지 한 번에 끝내는 것을 목표로 한다.
 
 ---
 
-## 1. Jekyll이란?
+## 이 글에서 해결하는 문제
 
-- **정적 사이트 생성기** (Static Site Generator)
-- Markdown → HTML 변환
-- GitHub Pages 무료 호스팅 지원
-- Ruby 기반
+- Jekyll 설치는 했는데 실행이 안 되는 문제
+- 로컬에서는 보이는데 배포 URL에서 안 뜨는 문제
+- 설정 파일이 많아 무엇이 핵심인지 모르는 문제
 
-### 정적 사이트 vs 동적 사이트
+완료 기준은 단순하다.
 
-| 구분 | 정적 (Jekyll) | 동적 (WordPress) |
-|------|--------------|------------------|
-| 서버 | 불필요 | 필요 (PHP, DB) |
-| 속도 | 빠름 | 상대적 느림 |
-| 보안 | 안전 | 취약점 관리 필요 |
-| 비용 | 무료 (GitHub) | 호스팅 비용 |
-| 댓글 | 외부 서비스 | 내장 |
+- `http://localhost:4000`에서 사이트가 열린다.
+- `https://username.github.io`에서 같은 사이트가 열린다.
 
 ---
 
-## 2. 사전 준비
+## 먼저 용어 3개만 정리
 
-### 2.1. Ruby 설치 (Ubuntu)
+### 1) Jekyll
+
+Markdown 파일을 HTML로 바꿔 정적 사이트를 만드는 도구.
+
+작은 예시:
+
+- 입력: `_posts/2026-02-06-hello.md`
+- 출력: `_site/2026/02/06/hello/index.html`
+
+### 2) Bundler
+
+Ruby 패키지 버전을 고정해서 "내 컴퓨터에서는 됐는데" 문제를 줄이는 도구.
+
+작은 예시:
+
+- `Gemfile`에 `gem "jekyll"`을 적고
+- `bundle install`을 실행하면 같은 버전 조합으로 설치된다.
+
+### 3) GitHub Pages
+
+GitHub 저장소의 정적 파일을 웹사이트로 배포해주는 서비스.
+
+작은 예시:
+
+- 저장소에 push
+- Actions가 빌드/배포
+- `username.github.io`에서 확인
+
+---
+
+## 1. 사전 준비
+
+Ubuntu 기준:
 
 ```bash
 sudo apt update
 sudo apt install -y ruby-full build-essential zlib1g-dev
-
-# gem 설치 경로 설정 (~/.bashrc 또는 ~/.zshrc)
-echo 'export GEM_HOME="$HOME/.local/share/gem/ruby/3.0.0"' >> ~/.bashrc
-echo 'export PATH="$HOME/.local/share/gem/ruby/3.0.0/bin:$PATH"' >> ~/.bashrc
-source ~/.bashrc
 ```
 
-### 2.2. Jekyll 설치
+Jekyll/Bundler 설치:
 
 ```bash
-gem install jekyll bundler
+gem install --user-install bundler jekyll
 ```
 
-### 2.3. 설치 확인
+PATH 설정 (`~/.zshrc` 또는 `~/.bashrc`):
 
 ```bash
+if which ruby >/dev/null 2>&1; then
+  GEM_BIN_DIR="$(ruby -e 'print Gem.user_dir')/bin"
+  export PATH="$GEM_BIN_DIR:$PATH"
+fi
+```
+
+적용:
+
+```bash
+source ~/.zshrc
+```
+
+검증:
+
+```bash
+ruby -v
+bundler -v
 jekyll -v
-# jekyll 4.3.x
 ```
 
 ---
 
-## 3. 새 프로젝트 생성
-
-### 3.1. 기본 생성
+## 2. 프로젝트 생성과 로컬 실행
 
 ```bash
 jekyll new my-blog
 cd my-blog
-```
-
-### 3.2. 테마 적용 (minimal-mistakes 권장)
-
-```bash
-# Gemfile 수정
-gem "minimal-mistakes-jekyll"
-```
-
-```yaml
-# _config.yml
-theme: minimal-mistakes-jekyll
-```
-
-```bash
 bundle install
-```
-
----
-
-## 4. 로컬 서버 실행
-
-```bash
 bundle exec jekyll serve
 ```
 
-`http://localhost:4000` 에서 확인.
+브라우저에서 `http://localhost:4000` 접속.
+
+왜 이 단계가 중요한가:
+
+- 배포 문제인지 로컬 문제인지 분리할 수 있다.
+- 로컬이 먼저 정상이어야 배포 디버깅이 쉬워진다.
 
 ---
 
-## 5. GitHub Pages 배포
+## 3. minimal-mistakes 테마 적용
 
-### 5.1. GitHub 저장소 생성
+`Gemfile`:
 
-저장소 이름: `username.github.io`
+```ruby
+gem "minimal-mistakes-jekyll"
+```
 
-### 5.2. GitHub Actions 설정
+`_config.yml`:
 
-`.github/workflows/pages.yml` 생성:
+```yaml
+theme: minimal-mistakes-jekyll
+```
+
+적용:
+
+```bash
+bundle install
+bundle exec jekyll serve
+```
+
+작은 확인 포인트:
+
+- 테마 스타일이 바뀌었는지
+- 콘솔에 gem 충돌 에러가 없는지
+
+---
+
+## 4. GitHub Pages 배포 (Actions)
+
+### 4.1 저장소 준비
+
+- 저장소 이름: `username.github.io`
+- 기본 브랜치: `main`
+
+### 4.2 워크플로우 추가
+
+`.github/workflows/pages.yml`:
 
 ```yaml
 name: Build and Deploy Jekyll
@@ -126,32 +174,37 @@ permissions:
   pages: write
   id-token: write
 
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/configure-pages@v5
       - uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '3.2'
+          ruby-version: "3.2"
           bundler-cache: true
-      - uses: actions/configure-pages@v4
       - run: bundle exec jekyll build
         env:
           JEKYLL_ENV: production
       - uses: actions/upload-pages-artifact@v3
 
   deploy:
-    runs-on: ubuntu-latest
-    needs: build
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
     steps:
-      - uses: actions/deploy-pages@v4
+      - id: deployment
+        uses: actions/deploy-pages@v4
 ```
 
-### 5.3. 푸시
+### 4.3 push
 
 ```bash
 git add .
@@ -159,19 +212,27 @@ git commit -m "Initial Jekyll setup"
 git push origin main
 ```
 
-### 5.4. GitHub 설정
+### 4.4 GitHub 설정
 
-1. Repository → Settings → Pages
-2. Source: **GitHub Actions** 선택
-
----
-
-## 6. 확인
-
-`https://username.github.io` 접속하여 배포 확인.
+- `Settings` -> `Pages` -> Source를 `GitHub Actions`로 선택
 
 ---
 
-## 다음 단계
+## 5. 실패할 때 가장 먼저 볼 것
 
-다음 글에서는 Jekyll의 폴더 구조를 이해한다.
+- `bundle exec jekyll serve`가 로컬에서 성공하는가
+- `_config.yml`의 `url` 값이 배포 주소와 같은가
+- Actions 로그에서 `bundle exec jekyll build`가 성공했는가
+- 저장소 이름이 `username.github.io` 규칙을 지켰는가
+
+---
+
+## 6. 이 글만 보고 점검하는 최종 체크리스트
+
+- Ruby/Bundler/Jekyll 버전 확인 완료
+- 로컬 서버 확인 완료
+- 테마 적용 확인 완료
+- GitHub Actions 배포 성공
+- 공개 URL 정상 접속
+
+여기까지 되면 "블로그를 열고 배포한다"는 첫 목표는 완료다. 다음 글에서 파일 구조를 이해하면, 이후 수정이 훨씬 쉬워진다.

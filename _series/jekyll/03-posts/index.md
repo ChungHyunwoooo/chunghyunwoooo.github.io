@@ -2,7 +2,7 @@
 title: "Jekyll 포스트 작성법"
 permalink: /series/jekyll/03-posts/
 date: 2026-02-06
-excerpt: "Markdown 문법, Front Matter, 이미지 삽입"
+excerpt: "Front Matter와 Markdown을 쉽게, 하지만 실무 기준으로 정리한 포스트 작성 가이드"
 categories:
   - Software
 tags:
@@ -15,28 +15,74 @@ header:
   teaser: "https://jekyllrb-ko.github.io/img/logo-2x.png"
 ---
 
-Jekyll에서 블로그 포스트를 작성하는 방법을 다룬다.
+글을 쓰는 속도보다 중요한 것은 "나중에도 읽히는 형식"이다.  
+이 글은 Jekyll 포스트를 일관되게 작성하는 최소 규칙을 설명하고, 바로 복붙 가능한 템플릿까지 제공한다.
 
 ---
 
-## 1. 포스트 생성
+## 이 글에서 해결하는 문제
 
-### 1.1. 파일 생성
+- Front Matter 항목이 매번 달라지는 문제
+- 이미지/코드 블록 형식이 글마다 달라지는 문제
+- 시간이 지나면 본인이 다시 읽기 어려워지는 문제
+
+---
+
+## 먼저 용어 3개 정리
+
+### 1) Front Matter
+
+문서 맨 위의 YAML 메타데이터 블록.
+
+작은 예시:
+
+```yaml
+---
+title: "포스트 제목"
+date: 2026-02-06
+---
+```
+
+### 2) 슬러그 (slug)
+
+URL에 쓰이는 짧고 읽기 쉬운 문자열.
+
+작은 예시:
+
+- 파일명 `2026-02-06-jekyll-post-guide.md`
+- URL 일부 `.../jekyll-post-guide/`
+
+### 3) 초안 (draft)
+
+공개 전 문서.
+
+작은 예시:
+
+- `_drafts/upcoming-post.md`
+- `bundle exec jekyll serve --drafts`
+
+---
+
+## 1. 파일명 규칙부터 고정
 
 ```bash
 touch _posts/2026-02-06-my-post-title.md
 ```
 
-**파일명 규칙:**
-- `YYYY-MM-DD-제목.md`
-- 공백 대신 하이픈(`-`) 사용
-- 영문 소문자 권장
+규칙:
+
+- 형식: `YYYY-MM-DD-title.md`
+- 공백 대신 `-`
+- 소문자 영문 권장
+
+왜 필요한가:
+
+- URL 안정성이 좋아진다.
+- 검색엔진/공유 링크 가독성이 좋아진다.
 
 ---
 
-### 1.2. Front Matter
-
-모든 포스트는 YAML 헤더로 시작:
+## 2. 바로 쓰는 Front Matter 템플릿
 
 ```yaml
 ---
@@ -44,274 +90,112 @@ title: "포스트 제목"
 date: 2026-02-06 14:30:00 +0900
 last_modified_at: 2026-02-07
 categories:
-  - Tech
-  - Tutorial
+  - Software
 tags:
   - Jekyll
-  - Markdown
-excerpt: "이 포스트의 요약문"
+  - Tutorial
+excerpt: "검색 결과와 목록에 보일 요약"
 toc: true
-toc_sticky: true
-toc_label: "목차"
+published: true
 ---
 ```
 
-**주요 속성:**
+핵심 설명:
 
-| 속성 | 설명 | 필수 |
-|------|------|------|
-| `title` | 포스트 제목 | ✅ |
-| `date` | 작성일 | ✅ |
-| `categories` | 카테고리 | 선택 |
-| `tags` | 태그 | 선택 |
-| `excerpt` | 요약문 | 선택 |
-| `toc` | 목차 표시 | 선택 |
-| `published` | false면 비공개 | 선택 |
+- `title`: 문서 제목
+- `date`: 발행 시각
+- `excerpt`: 목록/검색 요약
+- `published`: 공개 여부
+
+작은 규칙:
+
+- `excerpt`는 1~2문장으로 "이 글로 해결되는 문제"를 써라.
 
 ---
 
-## 2. Markdown 문법
+## 3. Markdown 작성 기준
 
-### 2.1. 제목
+### 제목 계층
+
+본문은 H2(`##`)부터 시작하고, 하위는 H3(`###`)로 내린다.
 
 ```markdown
-## 대제목 (H2)
-### 중제목 (H3)
-#### 소제목 (H4)
+## 큰 주제
+### 하위 주제
 ```
 
-> H1은 포스트 제목으로 자동 생성되므로 본문에서는 H2부터 사용.
+### 코드 블록
 
----
-
-### 2.2. 텍스트 스타일
-
-```markdown
-**굵게**
-*기울임*
-~~취소선~~
-`인라인 코드`
-```
-
-결과: **굵게**, *기울임*, ~~취소선~~, `인라인 코드`
-
----
-
-### 2.3. 목록
-
-```markdown
-- 순서 없는 목록
-- 항목 2
-  - 하위 항목
-
-1. 순서 있는 목록
-2. 항목 2
-```
-
----
-
-### 2.4. 링크
-
-```markdown
-[링크 텍스트](https://example.com)
-[내부 링크]({% raw %}{{ site.baseurl }}{% endraw %}/about/)
-```
-
----
-
-### 2.5. 이미지
-
-```markdown
-![대체 텍스트](/assets/images/photo.jpg)
-![대체 텍스트](./local-image.png)
-```
-
-**캡션 추가 (minimal-mistakes):**
-```markdown
-{% raw %}{% include figure image_path="/assets/images/photo.jpg" alt="설명" caption="이미지 캡션" %}{% endraw %}
-```
-
----
-
-### 2.6. 코드 블록
+언어 태그를 넣는다.
 
 ````markdown
-```python
-def hello():
-    print("Hello, World!")
+```bash
+bundle exec jekyll serve
 ```
 ````
 
-**결과:**
-```python
-def hello():
-    print("Hello, World!")
-```
-
-**지원 언어:** python, javascript, bash, cpp, yaml, json, markdown 등
-
----
-
-### 2.7. 인용문
+### 링크
 
 ```markdown
-> 인용문입니다.
-> 여러 줄도 가능합니다.
-```
-
-> 인용문입니다.
-> 여러 줄도 가능합니다.
-
----
-
-### 2.8. 테이블
-
-```markdown
-| 헤더1 | 헤더2 | 헤더3 |
-|-------|-------|-------|
-| 값1   | 값2   | 값3   |
-| 값4   | 값5   | 값6   |
-```
-
-| 헤더1 | 헤더2 | 헤더3 |
-|-------|-------|-------|
-| 값1   | 값2   | 값3   |
-| 값4   | 값5   | 값6   |
-
----
-
-### 2.9. 수평선
-
-```markdown
----
+[외부 링크](https://jekyllrb.com)
+[내부 링크](/series/jekyll/02-structure/)
 ```
 
 ---
 
-## 3. 이미지 관리
+## 4. 이미지 관리 규칙
 
-### 3.1. 기본 방식 (assets 폴더)
+권장 구조:
 
-```
+```text
 assets/images/posts/
 └── 2026-02-06-my-post/
-    ├── screenshot1.png
-    └── diagram.png
+    ├── cover.png
+    └── result.png
 ```
+
+본문 사용:
 
 ```markdown
-![스크린샷](/assets/images/posts/2026-02-06-my-post/screenshot1.png)
+![결과 화면](/assets/images/posts/2026-02-06-my-post/result.png)
 ```
 
-### 3.2. 이미지 크기 조절
+핵심:
 
-```html
-<img src="/assets/images/photo.jpg" width="500">
-```
-
-또는 (minimal-mistakes):
-```markdown
-{% raw %}{% include figure image_path="/assets/images/photo.jpg" alt="설명" class="half" %}{% endraw %}
-```
+- 파일명은 소문자 + 하이픈
+- `alt`에는 "무엇이 보이는지"를 짧게 작성
 
 ---
 
-## 4. 특수 기능
+## 5. 초안 운영 방식 2가지
 
-### 4.1. 알림 박스 (Notice)
-
-```markdown
-**주의:** 이것은 경고입니다.
-{: .notice--warning}
-
-**정보:** 이것은 정보입니다.
-{: .notice--info}
-
-**성공:** 이것은 성공입니다.
-{: .notice--success}
-
-**위험:** 이것은 위험입니다.
-{: .notice--danger}
-```
-
----
-
-### 4.2. 버튼
-
-```markdown
-[버튼 텍스트](https://example.com){: .btn .btn--primary}
-[큰 버튼](https://example.com){: .btn .btn--large}
-```
-
----
-
-### 4.3. 접기 (Details)
-
-```html
-<details>
-<summary>클릭하여 펼치기</summary>
-
-숨겨진 내용입니다.
-
-</details>
-```
-
----
-
-### 4.4. YouTube 삽입
-
-```markdown
-{% raw %}{% include video id="VIDEO_ID" provider="youtube" %}{% endraw %}
-```
-
----
-
-## 5. 초안 작성
-
-### 5.1. `_drafts/` 사용
-
-```
-_drafts/
-└── upcoming-post.md    # 날짜 없이
-```
-
-### 5.2. 로컬 확인
+### 방식 A: `_drafts`
 
 ```bash
 bundle exec jekyll serve --drafts
 ```
 
-### 5.3. 또는 `published: false`
+### 방식 B: `published: false`
 
 ```yaml
 ---
-title: "작업 중인 포스트"
+title: "작성 중"
 published: false
 ---
 ```
 
----
+실무 팁:
 
-## 6. 카테고리 & 태그 전략
-
-### 권장 구조
-
-| 구분 | 용도 | 예시 |
-|------|------|------|
-| 카테고리 | 대분류 (2-3개) | Hardware, Software, AI-ML |
-| 태그 | 세부 주제 (다수) | Jekyll, Python, SystemC |
-
-```yaml
-categories:
-  - Software
-tags:
-  - Jekyll
-  - Tutorial
-  - Markdown
-```
+- 팀 협업이면 `published: false`가 리뷰 흐름에 유리하다.
 
 ---
 
-## 다음 단계
+## 6. 발행 전 체크리스트
 
-다음 글에서는 Collections를 활용한 시리즈 관리를 다룬다.
+- 제목 계층이 논리적으로 내려가는가
+- 코드 블록에 언어 태그가 있는가
+- 이미지 경로와 alt 텍스트가 맞는가
+- 내부 링크가 끊기지 않았는가
+- `excerpt`가 글 핵심을 설명하는가
+
+이 기준만 지켜도 글의 가독성과 유지보수성이 눈에 띄게 올라간다. 다음 글에서 연재형 콘텐츠를 위한 Collections를 연결한다.

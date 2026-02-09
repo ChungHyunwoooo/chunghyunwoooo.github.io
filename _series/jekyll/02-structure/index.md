@@ -2,7 +2,7 @@
 title: "Jekyll 폴더 구조 이해하기"
 permalink: /series/jekyll/02-structure/
 date: 2026-02-06
-excerpt: "Jekyll 프로젝트의 디렉토리 구조와 역할"
+excerpt: "용어부터 경로까지, Jekyll 디렉토리 구조를 읽는 기준을 만드는 글"
 categories:
   - Software
 tags:
@@ -14,244 +14,175 @@ header:
   teaser: "https://jekyllrb-ko.github.io/img/logo-2x.png"
 ---
 
-Jekyll 프로젝트의 폴더 구조와 각 파일의 역할을 이해한다.
+Jekyll을 오래 쓰려면 "어디를 고쳐야 결과가 바뀌는지"를 먼저 알아야 한다.  
+이 글은 폴더 이름을 외우는 것이 아니라, 수정 지점을 찾는 기준을 만드는 데 집중한다.
 
 ---
 
-## 1. 전체 구조
+## 이 글에서 해결하는 문제
 
-```
+- `_posts`, `_layouts`, `_includes` 역할이 헷갈리는 문제
+- 수정했는데 화면이 안 바뀌는 문제
+- 파일이 늘어날수록 구조가 무너지는 문제
+
+---
+
+## 먼저 용어 4개 정리
+
+### 1) 소스 디렉토리
+
+사람이 직접 수정하는 원본 파일 영역.
+
+예시: `_posts/`, `_layouts/`, `assets/`
+
+### 2) 빌드 산출물
+
+Jekyll이 생성하는 결과물 영역.
+
+예시: `_site/`
+
+### 3) 레이아웃 (`_layouts`)
+
+페이지 전체 뼈대 템플릿.
+
+예시: 본문 위/아래 공통 header, footer.
+
+### 4) 인클루드 (`_includes`)
+
+반복되는 작은 조각 템플릿.
+
+예시: 목차, 배너, 시리즈 내비게이션.
+
+---
+
+## 1. 먼저 전체 지도 보기
+
+```text
 my-blog/
-├── _config.yml          # 사이트 설정
-├── _data/               # 데이터 파일 (YAML, JSON)
-│   └── navigation.yml
-├── _drafts/             # 초안 (비공개)
-├── _includes/           # 재사용 HTML 조각
-├── _layouts/            # 페이지 레이아웃
-├── _pages/              # 정적 페이지
-├── _posts/              # 블로그 포스트
-├── _sass/               # Sass 스타일
-├── _site/               # 빌드 결과물 (자동 생성)
-├── assets/              # 이미지, CSS, JS
-├── Gemfile              # Ruby 의존성
-└── index.html           # 메인 페이지
+├── _config.yml
+├── _data/
+├── _drafts/
+├── _includes/
+├── _layouts/
+├── _posts/
+├── _sass/
+├── _site/
+├── assets/
+├── Gemfile
+└── index.md
 ```
+
+핵심만 기억하면 된다.
+
+- "수정하는 곳": `_posts`, `_layouts`, `_includes`, `assets`, `_config.yml`
+- "결과가 쌓이는 곳": `_site`
 
 ---
 
-## 2. 핵심 파일/폴더
+## 2. 자주 건드리는 폴더를 실무 기준으로 설명
 
-### 2.1. `_config.yml`
+### `_config.yml`
 
-사이트 전체 설정 파일.
+사이트 전역 설정 파일.
+
+작은 예시:
 
 ```yaml
 title: "My Blog"
-description: "개발 블로그"
 url: "https://username.github.io"
 baseurl: ""
-
-# 테마
 theme: minimal-mistakes-jekyll
-
-# 플러그인
-plugins:
-  - jekyll-feed
-  - jekyll-sitemap
-
-# 기본값
-defaults:
-  - scope:
-      path: ""
-      type: posts
-    values:
-      layout: single
-      toc: true
 ```
 
-**주의:** `_config.yml` 수정 후에는 서버 재시작 필요.
+주의:
 
----
+- `_config.yml` 수정 후에는 서버 재시작이 안전하다.
 
-### 2.2. `_posts/`
+### `_posts/`
 
-블로그 포스트 저장 위치.
+날짜 기반 일반 글 저장소.
 
-**파일명 규칙:**
-```
-YYYY-MM-DD-제목.md
-2026-02-06-my-first-post.md
-```
+작은 예시:
 
-**Front Matter:**
-```yaml
----
-title: "첫 번째 포스트"
-date: 2026-02-06
-categories:
-  - Tech
-tags:
-  - Jekyll
----
-
-본문 내용...
+```text
+_posts/2026-02-06-my-first-post.md
 ```
 
----
+### `_layouts/`
 
-### 2.3. `_drafts/`
+페이지 전체 구조를 담당.
 
-비공개 초안. 파일명에 날짜 불필요.
+작은 예시:
 
-```
-_drafts/
-└── work-in-progress.md
-```
+- `single.html`을 고치면 여러 글의 공통 구조가 바뀐다.
 
-로컬에서 초안 보기:
-```bash
-bundle exec jekyll serve --drafts
-```
+### `_includes/`
 
----
+재사용되는 조각 파일.
 
-### 2.4. `_pages/`
+작은 예시:
 
-독립적인 정적 페이지.
-
-```
-_pages/
-├── about.md
-├── categories.md
-└── tags.md
-```
-
-**예시 (`about.md`):**
-```yaml
----
-title: "About"
-permalink: /about/
-layout: single
----
-
-소개 내용...
-```
-
----
-
-### 2.5. `_includes/`
-
-재사용 가능한 HTML 조각.
-
-```
-_includes/
-├── header.html
-├── footer.html
-└── toc.html
-```
-
-**사용법:**
 ```liquid
 {% raw %}{% include toc.html %}{% endraw %}
 ```
 
----
+### `_data/`
 
-### 2.6. `_layouts/`
+메뉴/설정 같은 정적 데이터를 분리.
 
-페이지 레이아웃 템플릿.
-
-```
-_layouts/
-├── default.html    # 기본 뼈대
-├── single.html     # 포스트용
-└── home.html       # 메인 페이지용
-```
-
-**상속 구조:**
-```
-default.html
-    └── single.html
-        └── 실제 포스트
-```
-
----
-
-### 2.7. `_data/`
-
-구조화된 데이터 파일.
+작은 예시 (`_data/navigation.yml`):
 
 ```yaml
-# _data/navigation.yml
 main:
   - title: "Posts"
     url: /posts/
-  - title: "About"
-    url: /about/
 ```
 
-**접근:**
-```liquid
-{% raw %}{% for item in site.data.navigation.main %}
-  <a href="{{ item.url }}">{{ item.title }}</a>
-{% endfor %}{% endraw %}
+### `assets/`
+
+이미지/CSS/JS 보관 위치.
+
+작은 예시:
+
+```text
+assets/images/logo.png
 ```
+
+### `_site/`
+
+빌드 결과물. 직접 수정하지 않는다.
 
 ---
 
-### 2.8. `assets/`
+## 3. "어디를 고치면 어디가 바뀌는지" 빠른 매핑
 
-정적 파일 (이미지, CSS, JS).
+```text
+_posts/2026-02-06-hello.md  -> _site/2026/02/06/hello/index.html
+assets/images/logo.png      -> _site/assets/images/logo.png
+_layouts/single.html        -> 여러 포스트의 공통 렌더링 결과
+```
 
-```
-assets/
-├── images/
-│   └── profile.jpg
-├── css/
-│   └── custom.css
-└── js/
-    └── custom.js
-```
+이 매핑을 알면 디버깅 속도가 크게 빨라진다.
 
 ---
 
-### 2.9. `_site/`
+## 4. 초보자가 자주 하는 실수
 
-빌드 결과물. **절대 수정하지 말 것.**
+- `_config.yml` 수정 후 서버 재시작 누락
+- `_site/`를 직접 수정
+- 이미지 경로를 상대/절대 혼용
 
-`.gitignore`에 추가:
-```
-_site/
-```
+실전 규칙:
 
----
-
-## 3. 빌드 과정
-
-```
-소스 파일                    결과물
-─────────────────────────────────────
-_posts/2026-02-06-hello.md  →  _site/2026/02/06/hello/index.html
-_pages/about.md             →  _site/about/index.html
-assets/images/logo.png      →  _site/assets/images/logo.png
-```
+- 결과가 이상하면 `_site/`가 아닌 소스 파일을 찾는다.
+- 경로 규칙을 팀 또는 개인 기준으로 하나로 통일한다.
 
 ---
 
-## 4. 공개 vs 비공개
+## 5. 최종 체크리스트
 
-| 폴더/파일 | 빌드 포함 | 설명 |
-|-----------|----------|------|
-| `_posts/` | ✅ | 공개 포스트 |
-| `_drafts/` | ❌ | 초안 (--drafts 옵션 시만) |
-| `_includes/` | ❌ | 템플릿 조각만 |
-| `_layouts/` | ❌ | 레이아웃만 |
-| `_config.yml` | ❌ | 설정만 |
-| `assets/` | ✅ | 정적 파일 |
-| `_site/` | - | 결과물 |
+- 핵심 폴더 역할을 설명할 수 있다.
+- 수정 지점과 결과 지점을 구분할 수 있다.
+- `_site/`를 손대지 않는 원칙을 지킨다.
 
----
-
-## 다음 단계
-
-다음 글에서는 포스트 작성법을 다룬다.
+다음 글에서는 실제 글 작성 규칙(Front Matter, Markdown, 이미지)을 같은 방식으로 정리한다.
