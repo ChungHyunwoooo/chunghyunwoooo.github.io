@@ -5,7 +5,7 @@
 <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
 <script>
   mermaid.initialize({
-    startOnLoad: true,
+    startOnLoad: false,
     theme: 'dark',
     themeVariables: {
       primaryColor: '#4a90d9',
@@ -15,6 +15,16 @@
       secondaryColor: '#2d3a4a',
       tertiaryColor: '#1a1a2e'
     }
+  });
+  document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('pre > code.language-mermaid').forEach(function(codeEl) {
+      var pre = codeEl.parentElement;
+      var div = document.createElement('div');
+      div.className = 'mermaid';
+      div.textContent = codeEl.textContent;
+      pre.parentElement.replaceChild(div, pre);
+    });
+    mermaid.run();
   });
 </script>
 
